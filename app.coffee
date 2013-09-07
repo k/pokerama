@@ -34,6 +34,7 @@ app.use '/assets', express.static('assets')
 app.get '/', routes.index
 app.get '/comconsole', routes.comconsole
 app.get '/player', routes.player
+app.get '/choosetable', routes.choosetable
 
 server.listen app.get('port'), '127.0.0.1'
 
