@@ -1,0 +1,126 @@
+.logo{
+	display:inline-block;
+	vertical-align: top;
+	margin: 0 auto;
+	background-image: url(../img/logo-small.png);
+	width: 200px;
+	height: 63px;
+	margin-bottom:20px;
+}
+.playerList{
+	width: 100%;
+	line-height:120px;
+}
+.player{
+	width:12%;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 5px;
+	border: 2px solid #000;
+	height: 100px;
+	background-color: #fff;
+	position: relative;
+	border-radius: 6px;
+	background: url(../img/samp.png);
+}
+.player.hasTurn{
+	border: 2px solid #c33532;
+}
+.player:last-child{
+	margin-right: 0px;
+}
+.playerName{
+	position:absolute;
+	bottom: 0px;
+	font-size: 1em;
+	line-height: 1.5em;
+	height: 1.5em;
+	background: rgba(0,0,0,0.6);
+	text-align: center;
+	width: 100%;
+	color: #fff;
+	font-weight: bold;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.player.hasTurn .playerName{
+	background: #c33532;
+}
+#startGame{
+	display:block;
+	margin: 0 auto;
+	width: 300px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left: 5px;
+	padding-right:5px;
+	background: #313131; /* Old browsers */
+	background: -moz-linear-gradient(top, #313131 0%, #5b5b5b 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#313131), color-stop(100%,#5b5b5b)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #313131 0%,#5b5b5b 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#313131', endColorstr='#5b5b5b',GradientType=0 ); /* IE6-9 */
+	text-align: center;
+	height: 70px;
+	font-size: 30px;
+	line-height: 60px;
+	border-radius: 9px;
+	cursor: pointer;
+	color: #fff;
+	border: 3px dotted #fff;
+	text-transform:uppercase;
+}
+#tableID{
+	text-align: right;
+	font-weight: bold;
+	font-size: 2em;
+	color: #fff;
+	line-height: 2em;
+	display: inline-block;
+	vertical-align: top;
+}
+.toast{
+	display: block;
+	background: rgba(0,0,0,0.6);
+	padding-left: 10px;
+	padding-right:10px;
+	padding-top:0px;
+	padding-top:0px;
+	color: #fff;
+	font-size: 1.5em;
+	line-height: 2em;
+	text-align: center;
+	border-radius: 6px;
+	margin-top:3em;
+}
+#blindAmt, .startGame{
+	display: inline-block;
+	vertical-align: top;
+}
+#blindAmt{
+	width: 55%;
+	height: 3em;
+	line-height: 3em;
+	font-size: 1.5em;
+}
+.startGame{
+	height: 3em;
+	line-height: 3em;
+	background: rgba(0,0,0,0.8);
+	padding-left:10px;
+	padding-right:10px;
+	width: 40%;
+	cursor:pointer;
+	color: #fff;
+	font-size: 1.5em;
+	text-align:center;
+	text-transform:uppercase;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+.startGame:hover{
+	background: rgba(4,56,142,0.8);
+}
