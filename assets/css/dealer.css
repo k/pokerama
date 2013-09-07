@@ -26,6 +26,9 @@
 .player.hasTurn{
 	border: 2px solid #c33532;
 }
+.player.hasFolded{
+	opacity:0.5;
+}
 .player:last-child{
 	margin-right: 0px;
 }
@@ -43,6 +46,36 @@
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+}
+.playerStatus{
+	position: absolute;
+	display:  block;
+	font-size:1em;
+	line-height:1.5em;
+	color: #fff;
+	font-weight: bold;
+	bottom: -27px;
+	padding-left:10px;
+	padding-right:10px;
+}
+.player.dealer:after{
+	content: "DEALER";
+	padding-left:5px;
+	color: #fff;
+	font-weight: bold;
+	background-color: #c33532;
+	padding-right: 5px;
+	margin-right: 5px;
+	padding-top:5px;
+	padding-bottom: 15px;
+	position: absolute;
+	text-align: center;
+	top: 0px;
+	left: 0px;
+	height: 1em;
+	font-size: 1em;
+	line-height: .8em;
+	width: 100%;
 }
 .player.hasTurn .playerName{
 	background: #c33532;
@@ -72,6 +105,24 @@
 	color: #fff;
 	border: 3px dotted #fff;
 	text-transform:uppercase;
+}
+.currentStats{
+	margin-bottom: 20px;
+}
+.currentStats div.small-4{
+	color: #fff;
+	font-size: 1.5em;
+	line-height: 1.5em;
+	background-color: #c33532;
+	padding-left: 8px;
+	padding-right: 8px;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+	border: 1px solid #fff;
+}
+.currentStats div.small-4.curPot{
+	background-color: rgba(4,56,142,0.8);
 }
 #tableID{
 	text-align: right;
@@ -123,4 +174,72 @@
 }
 .startGame:hover{
 	background: rgba(4,56,142,0.8);
+}
+
+/*card row*/
+
+.cardRow{
+	display: block;
+	position:relative;
+	height:225px;
+}
+.burnCard{
+	display: block;
+	position: absolute;
+	width: 150px;
+	background: url(../img/burncard.jpg);
+	border: 2px solid rgba(0,0,0,0.8);
+	height: 218px;
+	border-radius:6px;
+}
+.burnCard:first-of-type{
+	-webkit-transform:rotate(340deg);
+}
+.burnCard:nth-of-type(2){
+	-webkit-transform:rotate(348deg);
+}
+.burnCard:nth-of-type(3){
+	-webkit-transform:rotate(10deg);
+}
+.burnButton, .showButton{
+	display: inline-block;
+	vertical-align: top:;
+	width: 200px;
+	height: 40px;
+	background: #fff;
+	color: #000;
+	font-size: 1em;
+	line-height: 1em;
+}
+.showCards{
+	left: 25px;
+}
+.showCard:first-of-type{
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	width: 150px;
+	height: 218px;
+	margin-top:7px;
+}
+.showCard:not(:first-of-type){
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	width: 150px;
+	height: 218px;
+	margin-left: -40px;
+}
+.showCard:nth-of-type(3){
+	margin-top:4px;
+}
+.showCard:nth-of-type(4){
+	margin-top:-2px;
+}
+.showCard:nth-of-type(5){
+	margin-top:-5px;
+}
+.showCard img{
+	border-radius: 6px;
+	border: 1px solid rgba(0,0,0,0.8);
 }
