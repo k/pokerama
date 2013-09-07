@@ -22,3 +22,5 @@ body
 		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
 	script(src="assets/js/foundation.min.js")
 	script!= '$(document).foundation();' 
+	script(type='text/javascript') var userID = #{userID};
+	script(src="assets/js/choosetable.js")

@@ -12,6 +12,10 @@ exports.comconsole = function(req, res) {
 exports.player = function(req, res) {
 	res.send("player");
 };
+
+exports.playerControl = function(req, res) {
+    res.send("UISHIZNAZYSHIT");
+};
 exports.choosetable = function(req, res) {
     var data = {
         "client_id" :CLIENT_ID,
@@ -19,13 +23,14 @@ exports.choosetable = function(req, res) {
         "code" : res.req.query.code
     };
     request.post('https://api.venmo.com/oauth/access_token', {form:data}, function(e, r, body) {
-        info = JSON.parse(body);
-        // res.send('Access Token:' + info.access_token + '\n' + info.user.name);
-        if (info!=null){
-        	res.render('choosetable', {title: 'Enter your table ID', userInfo: info.name});
-        }else{
-        	res.send("error");
+        var info = JSON.parse(body);
+        if (info.error) {
+            res.send(e);
+            return;
         }
+        console.log(body.name);
+        // res.send('Access Token:' + info.access_token + '\n' + info.user.name);
+        res.render('choosetable', {title: 'Enter your table ID', userID: info.user.id});
     });
 
 };
