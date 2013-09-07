@@ -32,6 +32,7 @@ app.use express.methodOverride()
 app.use app.router
 app.use '/assets', express.static('assets')
 app.get '/', routes.index
+app.get '/comconsole', routes.comconsole
 
 server.listen app.get('port'), '127.0.0.1'
 

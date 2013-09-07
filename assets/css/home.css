@@ -1,0 +1,59 @@
+.logo{
+	display:block;
+	margin: 0 auto;
+	background-image: url(../img/logo.png);
+	width: 520px;
+	height: 163px;
+}
+.firstButton{
+	margin-top:40px;
+}
+#startGame, #joinGame{
+	display:block;
+	margin: 0 auto;
+	width: 450px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-left: 5px;
+	padding-right:5px;
+	background: #313131; /* Old browsers */
+	background: -moz-linear-gradient(top, #313131 0%, #5b5b5b 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#313131), color-stop(100%,#5b5b5b)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #313131 0%,#5b5b5b 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #313131 0%,#5b5b5b 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#313131', endColorstr='#5b5b5b',GradientType=0 ); /* IE6-9 */
+	text-align: center;
+	height: 70px;
+	font-size: 30px;
+	line-height: 60px;
+	border-radius: 9px;
+	cursor: pointer;
+	color: #fff;
+	border: 3px dotted #fff;
+	text-transform:uppercase;
+}
+.footer{
+	text-align: center;
+	padding-top:80px;
+	color: #fff;
+}
+.footer a{
+	color: #fff;
+	text-decoration: none;
+	background-color: #c33532;
+	padding: 3px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+#startGame{
+	font-size: 40px;
+}
+#joinGame img{
+	margin-bottom: 0px;
+	margin-left: 5px;
+}
+#joinGame{
+	margin-top: 1.5em;
+}

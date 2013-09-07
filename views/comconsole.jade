@@ -1,0 +1,52 @@
+doctype html
+head 
+	title pokerama
+	link(href="assets/css/normalize.css", type="text/css", rel="stylesheet")
+	link(href="assets/css/foundation.css", type="text/css", rel="stylesheet")
+	link(href="assets/css/style.css", type="text/css", rel="stylesheet")
+	link(href="assets/css/dealer.css", type="text/css", rel="stylesheet")
+	script(src="assets/js/vendor/custom.modernizr.js")
+	link(href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700cditalic,800italic,400,300,600,700,800", type="text/css", rel="stylesheet")
+	link(href="http://fonts.googleapis.com/css?family=Raleway", type="text/css", rel="stylesheet")
+body
+	div#outer
+		div#middle
+			div#inner
+				div.row
+					div.small-3.large-offset-9.columns.logo
+				div.row#playersWrap
+					ul.playerList
+						li.player
+							div.playerThumb
+							div.playerName Hermes Christopher Dawkins
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+						li.player
+							div.playerThumb
+							div.playerName Hermes
+				div.row#startGameWrap
+					div.small-12.small-centered.columns
+						div#startGame start game
+				div.row#tableID 4780
+				div.row#status
+					div.small-9.small-centered.columns.toast Dmitri Martin just joined the game
+	script
+		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
+	script(src="assets/js/foundation.min.js")
+	script!= '$(document).foundation();' 
