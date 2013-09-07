@@ -1,5 +1,6 @@
 .logo{
-	display:block;
+	display:inline-block;
+	vertical-align: top;
 	margin: 0 auto;
 	background-image: url(../img/logo-small.png);
 	width: 200px;
@@ -22,6 +23,9 @@
 	border-radius: 6px;
 	background: url(../img/samp.png);
 }
+.player.hasTurn{
+	border: 2px solid #c33532;
+}
 .player:last-child{
 	margin-right: 0px;
 }
@@ -31,7 +35,7 @@
 	font-size: 1em;
 	line-height: 1.5em;
 	height: 1.5em;
-	background: rgba(80,80,80,0.6);
+	background: rgba(0,0,0,0.6);
 	text-align: center;
 	width: 100%;
 	color: #fff;
@@ -39,6 +43,9 @@
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+}
+.player.hasTurn .playerName{
+	background: #c33532;
 }
 #startGame{
 	display:block;
@@ -67,11 +74,13 @@
 	text-transform:uppercase;
 }
 #tableID{
-	text-align: center;
+	text-align: right;
 	font-weight: bold;
 	font-size: 2em;
 	color: #fff;
-	line-height: 3em;
+	line-height: 2em;
+	display: inline-block;
+	vertical-align: top;
 }
 .toast{
 	display: block;
@@ -85,4 +94,33 @@
 	line-height: 2em;
 	text-align: center;
 	border-radius: 6px;
+	margin-top:3em;
+}
+#blindAmt, .startGame{
+	display: inline-block;
+	vertical-align: top;
+}
+#blindAmt{
+	width: 55%;
+	height: 3em;
+	line-height: 3em;
+	font-size: 1.5em;
+}
+.startGame{
+	height: 3em;
+	line-height: 3em;
+	background: rgba(0,0,0,0.8);
+	padding-left:10px;
+	padding-right:10px;
+	width: 40%;
+	cursor:pointer;
+	color: #fff;
+	font-size: 1.5em;
+	text-align:center;
+	text-transform:uppercase;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+.startGame:hover{
+	background: rgba(4,56,142,0.8);
 }

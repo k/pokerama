@@ -1,0 +1,36 @@
+.logo{
+	display:block;
+	margin: 0 auto;
+	background-image: url(../img/logo.png);
+	width: 520px;
+	height: 163px;
+	margin-bottom:20px;
+}
+#tableID, .submitTable{
+	display: inline-block;
+	vertical-align: top;
+}
+#tableID{
+	width: 55%;
+	height: 3em;
+	line-height: 3em;
+	font-size: 1.5em;
+}
+.submitTable{
+	height: 3em;
+	line-height: 3em;
+	background: rgba(0,0,0,0.8);
+	padding-left:10px;
+	padding-right:10px;
+	width: 40%;
+	cursor:pointer;
+	color: #fff;
+	font-size: 1.5em;
+	text-align:center;
+	text-transform:uppercase;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+.submitTable:hover{
+	background: rgba(4,56,142,0.8);
+}

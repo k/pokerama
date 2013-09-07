@@ -13,7 +13,8 @@ body
 		div#middle
 			div#inner
 				div.row
-					div.small-3.large-offset-9.columns.logo
+					div.small-9#tableID 4780
+					div.small-3.columns.logo
 				div.row#playersWrap
 					ul.playerList
 						li.player
@@ -31,7 +32,7 @@ body
 						li.player
 							div.playerThumb
 							div.playerName Hermes
-						li.player
+						li.player.hasTurn
 							div.playerThumb
 							div.playerName Hermes
 						li.player
@@ -41,9 +42,9 @@ body
 							div.playerThumb
 							div.playerName Hermes
 				div.row#startGameWrap
-					div.small-12.small-centered.columns
-						div#startGame start game
-				div.row#tableID 4780
+					div.small-8.small-centered.columns
+						input(type="text",name="blindAmt",id="blindAmt",placeholder="enter the big blind amount")
+						div.startGame start game
 				div.row#status
 					div.small-9.small-centered.columns.toast Dmitri Martin just joined the game
 	script
