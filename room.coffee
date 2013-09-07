@@ -38,6 +38,7 @@ class Room
 			i++
 		p.nextPlayer = @players[0]
 		this.dealHand()
+		return "action":"startGame","response":"Have fun!"
 
 	dealHand: () ->
 		for p in @players

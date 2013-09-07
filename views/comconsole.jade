@@ -1,6 +1,7 @@
 doctype html
 head 
 	title pokerama
+	script(src="http://cdn.sockjs.org/sockjs-0.3.min.js")
 	link(href="assets/css/normalize.css", type="text/css", rel="stylesheet")
 	link(href="assets/css/foundation.css", type="text/css", rel="stylesheet")
 	link(href="assets/css/style.css", type="text/css", rel="stylesheet")
@@ -68,5 +69,5 @@ body
 	script
 		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
 	script(src="assets/js/foundation.min.js")
-	script(src="assets/js/cardDealer.js");
 	script!= '$(document).foundation();' 
+	script(src="assets/js/cardDealer.js");
