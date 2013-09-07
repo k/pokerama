@@ -15,24 +15,48 @@ echo = sockjs.createServer()
 echo.on 'connection', (conn) ->
 	console.log 'connected'
 	conn.on 'data', (message) ->
-		obj = JSON.parse(message)
+		if message == "cr"
+			obj = "action":"createRoom"
+		else if message == "jr"
+			obj = "action":"joinRoom","roomID":0
+		else if message == "start"
+			obj = "action":"startGame"
+		else if message == "fold"
+			obj = "action":"fold"
+		else if message == "check" or message == "call" or message == "c"
+			obj = "action":"checkCall"
+		else if message == "newHand"
+			obj = "action":"newHand"
+		else if /raise (\d+)/.exec(message)?
+			m = /raise (\d+)/.exec(message)
+			obj = "action":"raise","bet":parseInt(m[1])
+		else
+			try
+				obj = JSON.parse(message)
+				console.log obj
+			catch
+				return
 		if obj.action == "createRoom"
 			rm = new Room(conn,roomCounter++)
-			if rm == null
+			if not rm?
 				conn.write JSON.stringify({"roomID":-1})
 				return
 			rooms[''+rm.id] = rm
 			conn.write JSON.stringify({'roomID':rm.id})
 			conns[conn] = rm
 		else if obj.action == "startGame"
-			ret = conns[conn].startGame()
-			conn.write JSON.stringify(ret) if ret != null
+			if conns[conn]?
+				ret = conns[conn].startGame()
+				conn.write JSON.stringify(ret) if ret != null
+			else
+				console.log "CRY MOTHERFUCKER."
 		else if obj.action == "joinRoom"
 			rm = rooms[''+obj.roomID]
-			if rm == null
+			console.log rm
+			if not rm?
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
 				return
-			pl = new Player(conn,"UUID","name")
+			pl = new Player(conn,"UUID","nm")
 			if rm.addPlayer pl
 				conns[conn] = rm
 				conn.write JSON.stringify("action":"joinRoom","response":rm.status)
@@ -44,10 +68,13 @@ echo.on 'connection', (conn) ->
 			ret = conns[conn].checkCall conn
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "raise"
-			ret = conns[conn].raise conn obj.bet
+			ret = conns[conn].raise(conn,obj.bet)
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "fold"
 			ret = conns[conn].fold conn
+			conn.write JSON.stringify(ret) if ret?
+		else if obj.action == "newHand"
+			ret = conns[conn].newHand conn
 			conn.write JSON.stringify(ret) if ret?
 		else
 			console.log obj
@@ -58,7 +85,7 @@ echo.on 'connection', (conn) ->
 app = express()
 server = require('http').createServer(app)
 
-echo.installHandlers server, prefix:'/echo'
+echo.installHandlers server, prefix:'/poker'
 
 app.set 'port', process.env.PORT || 3000
 app.set 'views', __dirname + '/views'
@@ -75,5 +102,5 @@ app.get '/choosetable', routes.choosetable
 app.get '/player', routes.playerControl
 app.post '/player', routes.player
 
-server.listen app.get('port'), '127.0.0.1'
+server.listen app.get('port'), '0.0.0.0'
 
