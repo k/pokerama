@@ -3,7 +3,7 @@ var request = require('request');
 var CLIENT_ID = 1350;
 var CLIENT_SECRET = "9hYxvrdWxWqb3BuFSmpa2bYSEPFscyfW";
 
-exports.temp = [];
+exports.temp = {};
 
 exports.index = function(req, res) {
 	res.render('index', {title: 'Start or Join a Pokerama game'});
@@ -30,10 +30,7 @@ exports.choosetable = function(req, res) {
             res.send(e);
             return;
         }
-        exports.temp.push({
-            key: info.user.id,
-            value: info
-        });
+		  exports.temp[''+info.user.id] = info
         res.render('choosetable', {title: 'Enter your table ID', userID: info.user.id});
     });
 

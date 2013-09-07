@@ -56,9 +56,10 @@ echo.on 'connection', (conn) ->
 			if not rm?
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
 				return
-			player = temp[obj.userID]
-			pl = new Player(conn, player.user.id, player.user.name, player.user.profile, player.access_token)
-			temp[obj.userID] = null
+			console.log routes.temp
+			player = routes.temp[''+obj.userID]
+			pl = new Player(conn, obj.userID, player.user.name, player.user.profile, player.access_token)
+			routes.temp[''+obj.userID] = null
 			if rm.addPlayer pl
 				conns[conn] = rm
 				conn.write JSON.stringify("action":"joinRoom","response":rm.status)
