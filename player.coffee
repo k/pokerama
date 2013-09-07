@@ -1,6 +1,6 @@
 exports.Player =
 class Player
-	constructor: (@conn,@uuid, @name) ->
+	constructor: (@conn,@uuid, @name, @pic, @token) ->
 		@seat = 0
 		@cards = []
 		@nextPlayer = null

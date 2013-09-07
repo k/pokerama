@@ -3,6 +3,8 @@ var request = require('request');
 var CLIENT_ID = 1350;
 var CLIENT_SECRET = "9hYxvrdWxWqb3BuFSmpa2bYSEPFscyfW";
 
+exports.temp = [];
+
 exports.index = function(req, res) {
 	res.render('index', {title: 'Start or Join a Pokerama game'});
 };
@@ -10,12 +12,12 @@ exports.comconsole = function(req, res) {
 	res.render('comconsole', {title: 'Start the Pokerama game'});
 };
 exports.player = function(req, res) {
+    var userID = req.params.userID;
+    var roomID = req.params.roomID;
+    // put these two vars in the 'render' call to send to the client
 	res.send("player");
 };
 
-exports.playerControl = function(req, res) {
-    res.send("UISHIZNAZYSHIT");
-};
 exports.choosetable = function(req, res) {
     var data = {
         "client_id" :CLIENT_ID,
@@ -28,8 +30,10 @@ exports.choosetable = function(req, res) {
             res.send(e);
             return;
         }
-        console.log(body.name);
-        // res.send('Access Token:' + info.access_token + '\n' + info.user.name);
+        exports.temp.push({
+            key: info.user.id,
+            value: info
+        });
         res.render('choosetable', {title: 'Enter your table ID', userID: info.user.id});
     });
 

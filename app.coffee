@@ -32,7 +32,9 @@ echo.on 'connection', (conn) ->
 			if rm == null
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
 				return
-			pl = new Player(conn,"UUID","name")
+			player = temp[obj.userID]
+			pl = new Player(conn, player.user.id, player.user.name, player.user.profile, player.access_token)
+			temp[obj.userID] = null
 			if rm.addPlayer pl
 				conns[conn] = rm
 				conn.write JSON.stringify("action":"joinRoom","response":rm.status)
@@ -72,8 +74,7 @@ app.use '/assets', express.static('assets')
 app.get '/', routes.index
 app.get '/comconsole', routes.comconsole
 app.get '/choosetable', routes.choosetable
-app.get '/player', routes.playerControl
-app.post '/player', routes.player
+app.get '/player', routes.player
 
 server.listen app.get('port'), '127.0.0.1'
 

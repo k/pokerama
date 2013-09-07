@@ -75,7 +75,7 @@ class Room
 			return false
 		@players.push player
 		player.seat = @players.length
-		@hostConn.write JSON.stringify("action":"playerJoined","player":{"name":player.name,"seat":@players.length})
+		@hostConn.write JSON.stringify("action":"playerJoined","player":{"name":player.name,"picture":player.pic, "userid":player.uuid,"seat":@players.length})
 		return true
 
 
