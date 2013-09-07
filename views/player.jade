@@ -15,58 +15,27 @@ body
 				div.row
 					div.small-9#tableID 4780
 					div.small-3.columns.logo
-				div.row#playersWrap
-					ul.playerList
-						li.player
-							div.playerThumb
-							div.playerName Hermes Christopher Dawkins
-							div.playerStatus $40
-						li.player.dealer
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player.hasFolded
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player.hasTurn
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-						li.player
-							div.playerThumb
-							div.playerName Hermes
-							div.playerStatus $40
-				div.row.currentStats
-					div.small-4.large-offset-1.columns CURRENT BET: $80
-					div.small-2.columns &nbsp;
-					div.small-4.columns.curPot CURRENT POT: $700
-					div.small-1.columns
-				div.row#startGameWrap
-					div.small-8.small-centered.columns
-						input(type="text",name="blindAmt",id="blindAmt",placeholder="enter the big blind amount")
-						div.startGame start game
-				div.row.cardRow
-					div.small-3.columns.burnPile
-					div.small-9.columns.showCards
-						div.showCard.4.s
-				div.row#status
-					div.small-9.small-centered.columns.toast Dmitri Martin just joined the game
-					div.burnButton burn
+				div.row
+					div.small-5.columns.playCards
+						div.playCard#Ks
+						div.playCard#Tc
+					div.small-7.columns.playConsole
+						div.row.playData
+							div.currentTurn Mike's turn
+							div.lastAction Yair called for $20
+						div.row.playActions
+							div.check check
+							div.call call
+							div.raise raise
+							div.bet bet
+							div.fold fold
+							div.options options
+				div.hidden
+					img(src="assets/img/cards/Ks.jpg" id="firstCardImg")
+					img(src="assets/img/cards/Tc.jpg" id="secondCardImg")
+					img(src="assets/img/burncard.jpg")
 	script
 		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
 	script(src="assets/js/foundation.min.js")
-	script(src="assets/js/cardDealer.js");
+	script(src="assets/js/play.js");
 	script!= '$(document).foundation();' 
