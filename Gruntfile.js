@@ -5,7 +5,7 @@ module.exports = function(grunt){
         nodemon: {
             prod: {
                 options: {
-                  file: 'app.js', 
+                  file: 'app.coffee', 
                   ignoredFiles: ['README.md', 'node_modules/**'],
                 }
             },
