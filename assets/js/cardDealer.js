@@ -21,3 +21,12 @@ function burnCard(){
 	}
 }
 $('.burnButton').click(burnCard);
+$(function(){
+	$('.showButton').click(function(){
+		showCard("As");
+	});
+})
+function showCard(card){
+	console.log(card);
+	$('.showCards').append("<div class='showCard' id="+card+"><img src='assets/img/cards/"+card+".jpg' width='150' height='218'/></div>");
+}
