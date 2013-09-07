@@ -1,21 +1,25 @@
-pokerEvaluator = require 'poker-evaluator'
+PokerEvaluator = require 'poker-evaluator'
 exports.Room =
 class Room
 	constructor: (@hostConn,@id) ->
-		@players = []
 		@currentPlayer = null
 		@currentDealer = null
-		this.makeDeck
 		@terminatingPlayer = null
+		@players = []
+		do @initHand
+	
+	initHand: () ->
+		@deck = this.makeDeck()
 		@currentRound = 0
 		@communalCards = []
 		@status = "waiting"
 		@currentBet = 0
-		@lastBet = 0
+		@lastRaise = 0
+		@gameEnded = false
 
 	makeDeck: () ->
 		arr = [].concat.apply([],((c + s for s in ['c','d','h','s']) for c in ['2','3','4','5','6','7','8','9','T','J','Q','K','A']))
-		@deck = ((a) ->
+		((a) ->
 			i = a.length
 			while --i > 0
 				j = ~~(Math.random() * (i+1))
@@ -38,40 +42,47 @@ class Room
 			i++
 		p.nextPlayer = @players[0]
 		this.dealHand()
-		return "action":"startGame","response":"Have fun!"
+		return "action":"startGame","response":"Have fun"
 
 	dealHand: () ->
+		@gameEnded = false
 		for p in @players
 			p.currentBet = 0
 			p.cards = []
 			p.isFolded = false
 		dealerCount = 0
-		p = @currentDealer.nextPlayer
-		p.currentBet = 25
-		p.nextPlayer.currentBet = 50
-		for pp in players
+		smallBlind = @currentDealer.nextPlayer #small
+		smallBlind.currentBet = 25
+		bigBlind = smallBlind.nextPlayer
+		bigBlind.currentBet = 50 #big
+		@round = 0
+		@currentBet = 50
+		@lastRaise = @currentBet
+		for pp in @players
 			st = ""
 			if pp == @currentDealer
-				st = "dealer"
-			else if pp == p
-				st = "smallBlind"
-			else if pp == p.nextPlayer
-				st = "bigBlind"
+				pp.name = st = "dealer"
+			else if pp == smallBlind
+				pp.name = st = "smallBlind"
+			else if pp == bigBlind
+				pp.name = st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
 
-		@terminatingPlayer = p.nextPlayer
+		@terminatingPlayer = bigBlind.nextPlayer
+		p = smallBlind
 		while dealerCount != 2
 			c = @deck.pop()
 			p.cards.push(c)
 			p.conn.write JSON.stringify("action":"showCard","card":c)
 			dealerCount++ if p == @currentDealer
 			p = p.nextPlayer
-		@currentPlayer = @terminatingPlayer.nextPlayer
+		@currentPlayer = @terminatingPlayer
 		for p in @players
-			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastBet,"canGo": p == @currentPlayer})
+			console.log "currentBet: " + @currentBet + ",p.currentBet: " + p.currentBet
+			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastRaise,"canGo": p == @currentPlayer})
 
 	addPlayer: (player) ->
-		if @player.length == 9
+		if @players.length == 9
 			return false
 		@players.push player
 		player.seat = @players.length
@@ -81,39 +92,53 @@ class Room
 
 	checkCall: (aConn) ->
 		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
+		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
 		@currentPlayer.currentBet = @currentBet
-		do step
+		do @step
 		
 
-	raise: (aConn, bet) ->
-		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
-		@currentBet += bet
-		@lastBet = bet
+	raise: (aConn, amount) ->
+		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
+		return "action":"raise","response":"Too low" if amount < @lastRaise
+		@currentBet += amount
+		console.log @currentPlayer.name + " raises by " + amount + " to total " + @currentBet
+		@lastRaise = amount
 		@currentPlayer.currentBet = @currentBet
 		@terminatingPlayer = @currentPlayer
-		do step
+		do @step
 	
 	fold: (aConn, bet) ->
-		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
+		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
+		console.log @currentPlayer.name + "folds"
 		@currentPlayer.isFolded = true
-		do step
+		do @step
 
 	step: () ->
-		do endHand if hasLonelyPlayer()
-		for p in players
-			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastBet,"canGo":false})
-		while @currentPlayer.nextPlayer != @terminatingPlayer
-			@currentPlayer = @currentPlayer.nextPlayer
+		return @sadEnding(@lonelyPlayer()) if @lonelyPlayer()?
+		for p in @players
+			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastRaise,"canGo":false})
+		op = @currentPlayer
+		@currentPlayer = @currentPlayer.nextPlayer
+		while @currentPlayer != @terminatingPlayer
 			if not @currentPlayer.isFolded
-				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastBet,"canGo":true})
-				return
-		do nextRound
+				console.log op.name + "->" + @currentPlayer.name
+				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-@currentPlayer.currentBet,"raiseAmount":@lastRaise,"canGo":true})
+				if not @terminatingPlayer?
+					@terminatingPlayer = @currentPlayer
+				return null
+			@currentPlayer = @currentPlayer.nextPlayer
+		do @nextRound
+
 	
-	hasLonelyPlayer: () ->
-		i = 0
-		for p in players
-			i++ if p.isFolded
-		return i == @players.length - 1
+	lonelyPlayer: () ->
+		loner = null
+		for p in @players
+			if loner? and not p.isFolded
+				return null
+			if not p.isFolded
+				loner = p
+		return loner
+
 
 	nextRound: () ->
 		switch @currentRound
@@ -125,33 +150,36 @@ class Room
 				for [1..3]
 					c = @deck.pop()
 					@hostConn.write JSON.stringify("action":"showCard","card":c)
-					@communalCards.add(c)
+					@communalCards.push(c)
 
 			when 1, 2
 				@deck.pop()
 				@hostConn.write JSON.stringify("action":"burn")
 				c = @deck.pop()
 				@hostConn.write JSON.stringify("action":"showCard","card":c)
-				@communalCards.add(c)
+				@communalCards.push(c)
 
 			when 3
-				do endHand
+				return @endHand()
 
 		@currentRound++
+		@currentPlayer = @currentDealer
+		@terminatingPlayer = null
+		do @step
+		return null
 
+	sadEnding: (player) ->
+		@splitPot [player]
 
 	endHand: () ->
 		results = []
 		max = -1
-		for p in @player
-			hand = []
-			for c in p.cards
-				hand.add(c)
-			for c in @communalCards
-				hand.add(c)
+		for p in @players
+			hand = p.cards.concat @communalCards
 
 			score = PokerEvaluator.evalHand(hand)
-			results.add([p,score])
+			results.push([p,score])
+			console.log p.name + "\n" + JSON.stringify(score)
 		
 		results.sort (a,b) ->
 			b[1].value - a[1].value
@@ -159,14 +187,34 @@ class Room
 		max = results[0][1].value
 		winners = []
 		for pair in results
-			winners.add(pair[0]) if pair[1].value == max
+			winners.push(pair[0]) if pair[1].value == max and not pair[0].isFolded
+
+		@splitPot winners
+	
+	splitPot: (winners) ->
 		pot = 0
 		for p in @players
 			pot += p.currentBet
 		winnings = (pot / winners.length).toFixed(2)
 
 		for p in @players
-			cashOut = p in winners ? winnings : 0
+			cashOut = 0
+			for w in winners
+				if w == p
+					cashOut = winnings
+					break
 			p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
+		for p in @players
+			p.conn.write JSON.stringify("action":"status","info":{"callAmount":0,"raiseAmount":0,"canGo":false})
+		@gameEnded = true
+		return null
+
+	newHand: (conn) ->
+		return "action":"newHand","response":"No." if conn != @hostConn
+		return "action":"newHand","response":"Game currently in progress" if not @gameEnded
+		do @initHand
+		@currentDealer = @currentDealer.nextPlayer
+		do @dealHand
+		return null
 
 
