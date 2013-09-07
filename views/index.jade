@@ -20,7 +20,8 @@ body
 							div#startGame create table
 				div.row
 					div.small-12.small-centered.columns
-						div#joinGame join table with <img src="assets/img/venmo.png" />
+						a(href='https://api.venmo.com/oauth/authorize?client_id=1350&scope=make_payments,access_profile&response_type=code')
+							div#joinGame join table with <img src="assets/img/venmo.png" />
 				div.row.footer
 					div.small-12.small.centered.columns built at pennapps 2013f by <a href="http://twitter.com/yaviner" target="_blank">@yaviner</a>, <a href="http://twitter.com/nisfrome" target="_blank">@nisfrome</a>, <a href="http://twitter.com/wtlangford" target="_blank">@wtlangford</a>, <a href="http://twitter.com/thekenner33" target="_blank">@thekenner33</a>, and @dwayne
 	script
