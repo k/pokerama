@@ -90,6 +90,7 @@ class Room
 			return false
 		@players.push player
 		player.seat = @players.length
+		console.log "Joined: hostConn: " + @hostConn
 		@hostConn.write JSON.stringify("action":"playerJoined","playerData":{"name":player.name,"picture":player.pic, "userid":player.uuid,"seat":@players.length})
 		return true
 

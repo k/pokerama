@@ -7,7 +7,7 @@ path = require 'path'
 conns = {}
 rooms = {}
 playerInfo = {}
-roomCounter = 1000
+roomCounter = 9001
 
 
 echo = sockjs.createServer()
