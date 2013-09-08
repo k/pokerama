@@ -23,12 +23,13 @@ sockjs.onmessage = function(e) {
         console.log(info.startGame);
         if (info.startGame.response == "Have fun") {
             // startGame();
+            $('#startGameWrap').hide();
         } else if (info.startGame.response == "Not enough players") {
             // Update UI to show that there are not enough players
         }
     } else if (info.playerJoined) {
         // Add player to UI (id, profile_pic, name)
-        // addPlayer(info.playerData.userID, info.playerData.picture);
+        addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);
         players.append(info.playerData);
         console.log(info.playerJoined);
     } else if (info.burn) {
@@ -41,10 +42,12 @@ sockjs.onmessage = function(e) {
         showCard(info.card);
         console.log(info.showCard);
     } else if (info.hasTurn) {
-        $('.hasTurn').removeClass();
+        $('.hasTurn').removeClass('hasTurn');
+        $('#_'+info.userID).addClass('hasTurn');
         // add class hasTurn to current player class info.userID
     } else if (info.fold) {
         toast(info.name + " folded.");
+        $('#_'+info.userID).addClass('hasFolded');
         // fold user
         console.log(info.fold);
     } else if (info.check) {
@@ -53,16 +56,37 @@ sockjs.onmessage = function(e) {
     } else if (info.call) {
         toast(info.name + " called.");
         // update player pot
+        updatePlayerPot(info.userID,info.amount);
         console.log(info.call);
     } else if (info.raise) {
         toast(info.name + " raised " + info.amtRaised);
         // update player pot
+        updatePlayerPot(info.userID,info.amount);
         console.log(info.raise);
     }
 
 
 };
-
+function updatePlayerPot(id,amt){
+    var delta;
+    delta.onload = function(
+        $('.player#_'+id '.playerStatus').val("$"+amt);
+        updateTotalPot(delta);
+    );
+    delta = parseFloat(amt) - parseFloat($('.player#_'+id '.playerStatus .playAmt').val());  
+}
+function updateTotalPot(delta){
+    $('#currTotal').val(parseFloat($('#currTotal').val()) + parseFloat(delta));
+}
+function addPlayer(id, name, pic){
+    $('.playerList').append("<li class='player' id='_"+
+        id+
+        "'><div class='playerThumb' style='background: url("+
+        pic+
+        ")'></div><div class='playerName'>"+
+        name+
+        "</div><div class='playerStatus'>$0</div></li>");
+}
 sockjs.onclose = function() {
     console.log("socket closed");
 };
