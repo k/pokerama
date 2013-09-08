@@ -22,10 +22,10 @@ sockjs.onmessage = function(e) {
         $('#tableID').text(roomID);
     } else if (info.action == 'startGame') {
         console.log(info.startGame);
-        if (info.startGame.response == "Have fun") {
+        if (info.response == "Have fun") {
             // startGame();
             $('#startGameWrap').hide();
-        } else if (info.startGame.response == "Not enough players") {
+        } else if (info.response == "Not enough players") {
             // Update UI to show that there are not enough players
         }
     } else if (info.action == 'playerJoined') {
@@ -82,7 +82,7 @@ function updateTotalPot(delta){
 function addPlayer(id, name, pic){
     $('.playerList').append("<li class='player' id='_"+
         id+
-        "'><img class='playerThumb' width='120' height='100' src='"+ 
+        "'><img class='playerThumb' width='120' src='"+ 
         pic+
         "' /><div class='playerName'>"+
         name+
