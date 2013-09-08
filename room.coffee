@@ -258,7 +258,8 @@ class Room
 					payment = {"payer":p, "payee":w, "amount":payOut, "message":message}
 					@transactions.push payment
 					console.log "Making Payment: " + p.name + " to " + w.name + " (" + payOut + ") " + message
-					#Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
+					makePayment = new Venmo().makePayment
+					makePayment(p.venmoAccessToken, w.venmoId, payOut/100, message)
 
 			winningUsers.push({"userID":w.venmoId,"name":w.name,"amount":totalWinnings.toFixed(2)})
 
@@ -270,7 +271,8 @@ class Room
 	reverseTransactions: () ->
 		for t in @transactions
 			console.log "Reversing Payment: " + t.payer.name + " to " + t.payee.name + " (" + t.amount + ") " + t.message
-			#Venmo.makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount, "reverse " + t.message)
+			makePayment = new Venmo().makePayment
+			makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount/100, "reverse " + t.message)
 
 	nextHand: (conn) ->
 		return "action":"nextHand","response":"No." if conn != @hostConn
@@ -286,7 +288,7 @@ class Room
 
 	generateHumiliatingMessage: (winner, loser, payoutAmount) ->
 		if winner.hasShownHand
-			return winner.name + " beat " + loser.name + " with a " + winner.score.handName + " and won " + payoutAmount
+			return winner.name + " beat " + loser.name + " with a " + winner.score.handName + " and won $" + payoutAmount + "!"
 		else
-			return winner.name + " may have bluffed " + loser.name + " out of " + payoutAmount
+			return winner.name + " may have bluffed " + loser.name + " out of $" + payoutAmount
 	
