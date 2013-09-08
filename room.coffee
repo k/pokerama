@@ -17,6 +17,7 @@ class Room
 		@currentBet = 0
 		@lastRaise = 0
 		@gameEnded = false
+    @transactions = []
 
 	makeDeck: () ->
 		arr = [].concat.apply([],((c + s for s in ['c','d','h','s']) for c in ['2','3','4','5','6','7','8','9','T','J','Q','K','A']))
@@ -220,11 +221,17 @@ class Room
         if p != w
           payOut = (p.currentBet / winners.length).toFixed(2)
           message = @generateHumiliatingMessage(w, p, payOut)
+          @transactions.push {"payer":p, "payee":w, "amount":payOut, "message":message}
           #Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
 
     p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
 		@hostConn.write JSON.stringify("action":"handOver","winners":winningNames)
 		return null
+
+  reverseTransactions: () ->
+    for t in @transactions
+      #Venmo.makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount, "reverse " + t.message)
+      1337
 
 	newHand: (conn) ->
 		return "action":"newHand","response":"No." if conn != @hostConn

@@ -27,6 +27,8 @@ echo.on 'connection', (conn) ->
 			obj = "action":"checkCall"
 		else if message == "newHand"
 			obj = "action":"newHand"
+		else if message == "unfuck" or message == "communism"
+			obj = "action":"reverseTransactions"
 		else if /raise (\d+)/.exec(message)?
 			m = /raise (\d+)/.exec(message)
 			obj = "action":"raise","bet":parseInt(m[1])
@@ -77,6 +79,9 @@ echo.on 'connection', (conn) ->
 			ret = conns[conn].fold conn
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "newHand"
+			ret = conns[conn].newHand conn
+			conn.write JSON.stringify(ret) if ret?
+    else if obj.action == "reverseTransactions"
 			ret = conns[conn].newHand conn
 			conn.write JSON.stringify(ret) if ret?
 		else
