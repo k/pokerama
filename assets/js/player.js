@@ -6,6 +6,7 @@ var canGo = false;
 var position = null;
 var card1 = null;
 var card2 = null;
+var userID = #{user};
 
 
 sockjs.onopen = function() {

@@ -12,10 +12,10 @@ exports.comconsole = function(req, res) {
 	res.render('comconsole', {title: 'Start the Pokerama game'});
 };
 exports.player = function(req, res) {
-    var userID = req.params.userID;
-    var roomID = req.params.roomID;
+    var userID = req.query.userID;
+    var roomID = req.query.roomID;
     // put these two vars in the 'render' call to send to the client
-	res.send("player");
+	res.render("player", {title: 'Player', id: userID, room: roomID});
 };
 
 exports.choosetable = function(req, res) {
@@ -30,7 +30,8 @@ exports.choosetable = function(req, res) {
             res.send(e);
             return;
         }
-		  exports.temp[''+info.user.id] = info
+        console.log(info);
+        exports.temp[''+info.user.id] = info;
         res.render('choosetable', {title: 'Enter your table ID', userID: info.user.id});
     });
 
