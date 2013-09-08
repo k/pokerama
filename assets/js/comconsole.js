@@ -58,6 +58,8 @@ sockjs.onmessage = function(e) {
         toast(info.name + " raised " + info.amount);
         // update player pot
         updatePlayerPot(info.userID,info.playerPot);
+    } else if (info.action == 'handOver') {
+        toast(info.winners[0].name + " won!");
     } else if (info.action == 'status') {
         updatePlayerPot(info.userID,info.amount);
     }

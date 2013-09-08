@@ -73,6 +73,8 @@ sockjs.onmessage = function(e) {
                 $('.playActions div').addClass("hidden");
         }
     } else if (info.action == 'handOver') {
+        toast(info.winners[0].name + " won!");
+    } else if (info.action == 'clearTable') {
         // clear cards
         card1 = null;
         card2 = null;
