@@ -25,10 +25,17 @@ body
 						div.row.playActions
 							div.check.hidden check
 							div.call.hidden call
-							div.raise.hidden raise
-							div.bet.hidden bet
+							div.raise.menuOpen.hidden raise
+							div.bet.menuOpen.hidden bet
 							div.fold.hidden fold
-							div.options.hidden options
+							div.options.hidden option
+						ul.raiseMenu
+							li.little.standard 20
+							li.big.standard 40
+							li.custom
+								input(type="text",name="customRaise",id="customRaise")
+								div.submitCustom custom
+							li.hideMenu hide
 				div.hidden
 					img(src="assets/img/burncard.jpg")
 	script document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>')
