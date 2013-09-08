@@ -187,20 +187,24 @@
 	line-height: 3em;
 	font-size: 1.5em;
 }
+#startGameWrap{
+	position:relative;
+	text-align:center;
+}
 .startGame{
 	height: 3em;
 	line-height: 3em;
 	background: rgba(0,0,0,0.8);
 	padding-left:10px;
 	padding-right:10px;
-	width: 40%;
+	width: 200px;
 	cursor:pointer;
 	color: #fff;
 	font-size: 1.5em;
 	text-align:center;
 	text-transform:uppercase;
-	border-top-right-radius: 6px;
-	border-bottom-right-radius: 6px;
+	border-radius:6px;
+	margin: 0 auto;
 }
 .startGame:hover{
 	background: rgba(4,56,142,0.8);
