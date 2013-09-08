@@ -31,6 +31,10 @@ sockjs.onmessage = function(e) {
         } else if (info.response == "Not enough players") {
             // Update UI to show that there are not enough players
         }
+    } else if(info.action == 'setDealer'){
+        var toUse = "_"+info.userID;
+        $('.isDealer').removeClass('isDealer');
+        $(toUse).addClass('isDealer');
     } else if (info.action == 'playerJoined') {
         // Add player to UI (id, profile_pic, name)
         addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);

@@ -45,8 +45,9 @@
 .raiseMenu{
 	list-style:none;
 	position:absolute;
-	top:100px;
-	left: 100px;
+	top:70px;
+	right: 0px;
+	width:130px;
 }
 .raiseMenu li.standard, .raiseMenu li.hideMenu{
 	display: block;
@@ -92,17 +93,25 @@
 .playData div:nth-of-type(2){
 	background: rgba(0,0,0,0.6);
 }
+.playActions{
+	height: 340px;
+	width: 300px;
+	display: block;
+}
 .playActions div{
-	font-size: 1em;
-	line-height: 1em;
+	display:inline-block;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	margin-bottom:.2em;
-	width: 5em;
+	height: 150px;
+	width: 140px;
 	background-color: #c33532;
 	color: #fff;
 	text-align: center;
 	cursor: pointer;
+	line-height:150px;
+	margin-right:10px;
+	font-size:2em;
 }
 .hidden{
 	display:none;

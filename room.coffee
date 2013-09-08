@@ -72,6 +72,7 @@ class Room
 			st = ""
 			if pp == @currentDealer
 				st = "dealer"
+				@hostConn.write JSON.stringify("action":"setDealer","userID":pp.venmoId)
 			else if pp == smallBlind
 				st = "smallBlind"
 			else if pp == bigBlind
@@ -204,6 +205,7 @@ class Room
 			when 3
 				return @endHand()
 
+		@lastRaise = @blind
 		@currentRound++
 		@currentPlayer = @currentDealer
 		@terminatingPlayer = null
