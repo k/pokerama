@@ -14,8 +14,10 @@ body
 		div#middle
 			div#inner
 				div.row
-					div.small-9#tableID #{room}
 					div.small-3.columns.logo
+					div.small-8.columns#status
+						div.toast Waiting for game to start
+					div.small-1.columns#tableID #{room}
 				div.row#playersWrap
 					ul.playerList
 				div.row.currentStats
@@ -30,11 +32,6 @@ body
 				div.row.cardRow
 					div.small-2.columns.burnPile
 					div.small-10.columns.showCards
-				div.row#status
-					div.small-9.small-centered.columns.toast Dmitri Martin just joined the game
-					div.burnButton burn
-					div.showButton show
-					div.messageChange message
 	script
 		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
 	script(src="assets/js/foundation.min.js")
