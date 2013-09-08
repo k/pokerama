@@ -73,6 +73,9 @@ class Room
 			else if pp == bigBlind
 				st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
+			
+		@hostConn.write JSON.serialize("action":"status","userID":"#{smallBlind.venmoId}","amount":@blind / 2)
+		@hostConn.write JSON.serialize("action":"status","userID":"#{bigBlind.venmoId}","amount":@blind)
 
 		@terminatingPlayer = bigBlind.nextPlayer
 		p = smallBlind
