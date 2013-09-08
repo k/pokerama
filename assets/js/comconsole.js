@@ -84,6 +84,7 @@ function resetPot() {
     }
     updateCurrBet(0);
     updateTotalPot(0);
+    $('.hasFolded').removeClass('hasFolded');
 }
 function setPlayerPot(id,amt) {
     $('.player#_'+id+'.playerStatus .playAmt').text(amt);
@@ -105,7 +106,7 @@ function updateCurrBet(amt) {
 function addPlayer(id, name, pic){
     $('.playerList').append("<li class='player' id='_"+
         id+
-        "'><img class='playerThumb' width='120' src='"+ 
+        "'><img class='playerThumb' width='100' src='"+ 
         pic+
         "' /><div class='playerName'>"+
         name+

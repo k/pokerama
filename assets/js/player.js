@@ -104,6 +104,7 @@ $('li.custom .submitCustom').click(function(){
 function clearCards(){
     $('.playActions div').addClass("hidden");
     $('.playCards .playCard').remove();
+    toast("Waiting for round to begin");
 }
 function toast(msg){
     $('.lastAction').text(msg);
@@ -148,5 +149,6 @@ $(document).ready(function(){
 });
 
 sockjs.onclose = function() {
+    sockjs.send(JSON.stringify({'action': 'fold'}));
     console.log("socket closed");
 };
