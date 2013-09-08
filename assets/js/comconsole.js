@@ -69,10 +69,25 @@ sockjs.onmessage = function(e) {
         toast(info.winners[0].name + " won!");
     } else if (info.action == 'status') {
         updatePlayerPot(info.userID,info.amount);
+    } else if (info.action == 'clearTable') {
+        clearTable();
+        cards = [];
+        resetPot();
     }
     console.log(info);
+
 };
 
+function resetPot() {
+    for (var i = 0; i < players.length(); i++) {
+        setPlayerPot(players[i].userID, 0);
+    }
+    updateCurrBet(0);
+    updateTotalPot(0);
+}
+function setPlayerPot(id,amt) {
+    $('.player#_'+id+'.playerStatus .playAmt').text(amt);
+}
 function updatePlayerPot(id,amt){
     var delta;
     delta = parseFloat(amt) - parseFloat($('.player#_'+id + ' .playerStatus .playAmt').text());  
