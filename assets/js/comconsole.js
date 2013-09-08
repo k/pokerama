@@ -31,7 +31,6 @@ sockjs.onmessage = function(e) {
         }
     } else if (info.action == 'playerJoined') {
         // Add player to UI (id, profile_pic, name)
-        console.log(info);
         addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);
         players.push(info.playerData);
     } else if (info.action == 'burn') {
@@ -59,19 +58,26 @@ sockjs.onmessage = function(e) {
         toast(info.name + " raised " + info.amtRaised);
         // update player pot
         updatePlayerPot(info.userID,info.amount);
+    } else if (info.action == 'status') {
+        updatePlayerPot(info.userID,info.amount);
     }
-
-
+    console.log(info);
 };
+
 function updatePlayerPot(id,amt){
     var delta;
-    delta = parseFloat(amt) - parseFloat($('.player#_'+id + '.playerStatus .playAmt').val());  
-    $('.player#_'+id +'.playerStatus').val("$"+amt);
+    delta = parseFloat(amt) - parseFloat($('.player#_'+id + ' .playerStatus .playAmt').text());  
+    $('.player#_'+id +' .playerStatus .playAmt').text(amt);
+    updateCurrBet(amt);
     updateTotalPot(delta);
 }
 function updateTotalPot(delta){
-    $('#currTotal').val(parseFloat($('#currTotal').val()) + parseFloat(delta));
+    $('#currTotal').text(parseFloat($('#currTotal').text()) + parseFloat(delta));
 }
+function updateCurrBet(amt) {
+    $('#currBet').text(amt); 
+}
+
 function addPlayer(id, name, pic){
     $('.playerList').append("<li class='player' id='_"+
         id+

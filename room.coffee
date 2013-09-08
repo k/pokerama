@@ -32,6 +32,8 @@ class Room
 			a) arr
 	
 	startGame: (blind) ->
+		if not blind? or blind == 0 or parseInt(blind) == NaN
+			blind = 6
 		console.log blind
 		@blind = blind
 		if @players.length < 3
@@ -62,7 +64,7 @@ class Room
 		bigBlind = smallBlind.nextPlayer
 		bigBlind.currentBet = @blind #big
 		@round = 0
-		@currentBet = 50
+		@currentBet = @blind
 		@lastRaise = @currentBet
 		for pp in @players
 			st = ""
@@ -74,8 +76,8 @@ class Room
 				st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
 			
-		@hostConn.write JSON.serialize("action":"status","userID":"#{smallBlind.venmoId}","amount":@blind / 2)
-		@hostConn.write JSON.serialize("action":"status","userID":"#{bigBlind.venmoId}","amount":@blind)
+		@hostConn.write JSON.stringify("action":"status","userID":"#{smallBlind.venmoId}","amount":''+(@blind / 2))
+		@hostConn.write JSON.stringify("action":"status","userID":"#{bigBlind.venmoId}","amount":''+(@blind))
 
 		@terminatingPlayer = bigBlind.nextPlayer
 		p = smallBlind
