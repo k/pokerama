@@ -16,8 +16,9 @@ echo.on 'connection', (conn) ->
 	conn.on 'data', (message) ->
 		if message == "cr"
 			obj = "action":"createRoom"
-		else if message == "jr"
-			rm = rooms['1000']
+		else if /jr (\d+)/.exec(message)?
+			m = /jr (\d+)/.exec(message)
+			rm = rooms[m[1]]
 			console.log rm
 			if not rm?
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
@@ -30,7 +31,7 @@ echo.on 'connection', (conn) ->
 				return
 			else
 				conn.write JSON.stringify("action":"joinRoom","response":"cannot join room")
-				return obj = "action":"joinRoom","roomID":1000
+				return 
 		else if message == "start"
 			obj = "action":"startGame"
 		else if message == "fold"
@@ -72,6 +73,9 @@ echo.on 'connection', (conn) ->
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
 				return
 			player = routes.temp[''+obj.userID]
+			if not player.access_token? or not player.user?
+				conn.write "fuck you"
+				return
 			pl = new Player(conn, obj.userID, player.access_token, player.user.name, player.user.picture)
 			routes.temp[''+obj.userID] = null
 			if rm.addPlayer conn, pl

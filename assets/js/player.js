@@ -20,6 +20,22 @@ var position = null;
 var card1 = null;
 var card2 = null;
 
+$('.check').click(function() {
+    sockjs.send(JSON.stringify({'action': 'checkCall'}));
+});
+$('.call').click(function() {
+    sockjs.send(JSON.stringify({'action': 'checkCall'}));
+});
+$('.raise').click(function() {
+    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
+});
+$('.bet').click(function() {
+    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
+});
+$('.fold').click(function() {
+    sockjs.send(JSON.stringify({'action': 'fold'}));
+});
+
 sockjs.onopen = function() {
     console.log(roomID);
     sockjs.send(JSON.stringify({'action': 'joinRoom', 'room': roomID, 'userID': userID}));
@@ -69,7 +85,6 @@ sockjs.onmessage = function(e) {
         } else {
                 $('.playActions div').addClass("hidden");
         }
-        console.log(info.status);
     } else if (info.action == 'handOver') {
         // clear cards
         card1 = null;
@@ -91,14 +106,12 @@ function dealCard(card){
         $('.playCards').append("<div class='playCard' style='display:none;' id='"+card+"'></div>");
     },200);
     //wait for newCard DOM object to load before sliding it in, like a bawss
-    newCard.onload = function(){
-        slideCard(newCard);
-    };
     newCard = $('.playCards').children().last('.playCard');    
+    slideCard(newCard);
 }
 function slideCard(newCard){
     $(newCard).fadeIn('fast');
-    $(newCard).css({background: url("assets/img/burncard.jpg")});
+    $(newCard).css({'background': url("assets/img/burncard.jpg")});
 }
 $(document).ready(function(){
     var firstCard = $('.playCards').children().first('.playCard');
