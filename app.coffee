@@ -82,7 +82,7 @@ echo.on 'connection', (conn) ->
 			ret = conns[conn].newHand conn
 			conn.write JSON.stringify(ret) if ret?
     else if obj.action == "reverseTransactions"
-			ret = conns[conn].newHand conn
+			ret = do conns[conn].reverseTransactions
 			conn.write JSON.stringify(ret) if ret?
 		else
 			console.log obj
