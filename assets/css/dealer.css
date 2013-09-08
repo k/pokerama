@@ -17,7 +17,7 @@
 	top:20px;
 }
 .player{
-	width:120px;
+	width:100px;
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 5px;
@@ -42,11 +42,11 @@
 	margin-right: 0px;
 }
 .isDealer:after{
-	content: url(../assets/img/dealer.png);
+	content: url(../img/dealer.png);
 	display:block;
 	position:absolute;
-	bottom:5px;
-	right:5px;
+	bottom:-25px;
+	right:3px;
 }
 .playerName{
 	position:absolute;
