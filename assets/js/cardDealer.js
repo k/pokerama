@@ -26,7 +26,16 @@ $(function(){
 		showCard("As");
 	});
 })
+$(function(){
+	$('.messageChange').click(function(){
+		toast("I'm a new message");
+	})
+})
 function showCard(card){
-	console.log(card);
-	$('.showCards').append("<div class='showCard' id="+card+"><img src='assets/img/cards/"+card+".jpg' width='150' height='218'/></div>");
+	setTimeout(function(){
+		$('.showCards').append("<div class='showCard' id="+card+"><img src='assets/img/cards/"+card+".jpg' width='150' height='218'/></div>");
+	},100);
 }
+function toast(message){
+	$('.toast').text(message);
+};

@@ -21,7 +21,7 @@ sockjs.onmessage = function(e) {
         roomID = info.roomID;
     } else if (info.startGame) {
         console.log(info.startGame);
-        if (info.startGame.response == "Have fun!") {
+        if (info.startGame.response == "Have fun") {
             // startGame();
         } else if (info.startGame.response == "Not enough players") {
             // Update UI to show that there are not enough players

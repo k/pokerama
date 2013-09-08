@@ -201,7 +201,7 @@
 .burnCard:nth-of-type(3){
 	-webkit-transform:rotate(10deg);
 }
-.burnButton, .showButton{
+.burnButton, .showButton, .messageChange{
 	display: inline-block;
 	vertical-align: top:;
 	width: 200px;
