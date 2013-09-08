@@ -49,13 +49,14 @@ echo.on 'connection', (conn) ->
 				obj = JSON.parse(message)
 				console.log obj
 			catch
+				console.log "FLAILURE: " + message
 				return
 		if obj.action == "createRoom"
 			rm = new Room(conn,roomCounter++)
 			if not rm?
 				conn.write JSON.stringify({"roomID":-1})
 				return
-			rooms[''+rm.id] = rm
+			rooms["#{rm.id}"] = rm
 			conn.write JSON.stringify({'roomID':rm.id})
 			conns[conn] = rm
 		else if obj.action == "startGame"
@@ -65,20 +66,21 @@ echo.on 'connection', (conn) ->
 			else
 				console.log "CRY MOTHERFUCKER."
 		else if obj.action == "joinRoom"
-			rm = rooms[''+obj.roomID]
-			console.log rm
+			console.log "JOIN ROOM"
+			rm = rooms["#{obj.room}"]
 			if not rm?
 				conn.write JSON.stringify("action":"joinRoom","response":"No such room")
 				return
-			console.log routes.temp
 			player = routes.temp[''+obj.userID]
-			pl = new Player(conn, obj.userID, player.access_token, player.user.name, player.user.profile)
+			pl = new Player(conn, obj.userID, player.access_token, player.user.name, player.user.picture)
 			routes.temp[''+obj.userID] = null
 			if rm.addPlayer conn, pl
+				console.log rm.status
 				conns[conn] = rm
 				conn.write JSON.stringify("action":"joinRoom","response":rm.status)
 				return
 			else
+				console.log "JOIN FAIL"
 				conn.write JSON.stringify("action":"joinRoom","response":"cannot join room")
 				return
 		else if obj.action == "checkCall"

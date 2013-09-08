@@ -12,7 +12,7 @@
 	line-height:120px;
 }
 .player{
-	width:12%;
+	width:120px;
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 5px;
@@ -21,7 +21,10 @@
 	background-color: #fff;
 	position: relative;
 	border-radius: 6px;
-	background: url(../img/samp.png);
+}
+.playerThumb{
+	display:block;
+	border-radius:6px;
 }
 .player.hasTurn{
 	border: 2px solid #c33532;
