@@ -8,7 +8,6 @@ conns = {}
 rooms = {}
 playerInfo = {}
 roomCounter = 1000
-pl = null
 
 
 echo = sockjs.createServer()
@@ -81,7 +80,7 @@ echo.on 'connection', (conn) ->
 		else if obj.action == "newHand"
 			ret = conns[conn].newHand conn
 			conn.write JSON.stringify(ret) if ret?
-    else if obj.action == "reverseTransactions"
+		else if obj.action == "reverseTransactions"
 			ret = do conns[conn].reverseTransactions
 			conn.write JSON.stringify(ret) if ret?
 		else
