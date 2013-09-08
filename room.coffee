@@ -243,6 +243,4 @@ class Room
 			return winner.name + " beat " + loser.name + " with a " + winner.score.handName + " and won " + payoutAmount
 		else
 			return winner.name + " may have bluffed " + loser.name + " out of " + payoutAmount
-		
-		return winner.name + " beat " + loser + "'s " + loser.score.handName
 	
