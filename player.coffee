@@ -7,6 +7,7 @@ class Player
 		@previousPlayer = null
 		@currentBet = 0
     @score = null
-		@isFolded = false
+		@hasFolded = false
+    @hasShownHand = false
 
 

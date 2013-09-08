@@ -50,7 +50,8 @@ class Room
 		for p in @players
 			p.currentBet = 0
 			p.cards = []
-			p.isFolded = false
+			p.hasFolded = false
+      p.hasShownHand = false
 		dealerCount = 0
 		smallBlind = @currentDealer.nextPlayer #small
 		smallBlind.currentBet = 25
@@ -120,7 +121,7 @@ class Room
 		return "action":"fold","response":"Game is over" if @gameEnded?
 		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + "folds"
-		@currentPlayer.isFolded = true
+		@currentPlayer.hasFolded = true
 		do @step
 
 	step: () ->
@@ -130,7 +131,7 @@ class Room
 		op = @currentPlayer
 		@currentPlayer = @currentPlayer.nextPlayer
 		while @currentPlayer != @terminatingPlayer
-			if not @currentPlayer.isFolded
+			if not @currentPlayer.hasFolded
 				console.log op.name + "->" + @currentPlayer.name
 				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-@currentPlayer.currentBet,"raiseAmount":@lastRaise,"canGo":true})
 				if not @terminatingPlayer?
@@ -144,9 +145,9 @@ class Room
 	lonelyPlayer: () ->
 		loner = null
 		for p in @players
-			if loner? and not p.isFolded
+			if loner? and not p.hasFolded
 				return null
-			if not p.isFolded
+			if not p.hasFolded
 				loner = p
 		return loner
 
@@ -197,8 +198,10 @@ class Room
 		max = orderedPlayers[0].score.value
 		winners = []
 		for p in orderedPlayers
-			if p.score.value == max and not p.isFolded
-        winners.push(p)
+      if not p.hasFolded
+        p.hasShownHand = true
+        if p.score.value == max
+          winners.push(p)
 
 		@splitPot winners
 	
