@@ -29,11 +29,11 @@ body
 							div.bet.menuOpen.hidden bet
 							div.fold.hidden fold
 							div.options.hidden option
-						ul.raiseMenu
+						ul.raiseMenu.hidden
 							li.little.standard 20
 							li.big.standard 40
 							li.custom
-								input(type="text",name="customRaise",id="customRaise")
+								input(type="text",name="customRaise",id="customRaise" pattern="\d*")
 								div.submitCustom custom
 							li.hideMenu hide
 				div.hidden
