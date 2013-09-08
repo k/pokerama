@@ -33,10 +33,8 @@ class Room
 	
 	startGame: (blind) ->
 		if not blind? or blind == 0 or parseInt(blind) == NaN
-			blind = 6
-		console.log blind
-		if not blind? or blind == 0 or parseInt(blind) == NaN
-			blind = 6
+			blind = 2
+		console.log "blind is " + blind
 		@blind = blind
 		if @players.length < 3
 			return "action":"startGame","response":"Not enough players"
