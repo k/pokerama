@@ -1,6 +1,7 @@
 doctype html
 head 
 	title play pokerama
+	script(src="http://cdn.sockjs.org/sockjs-0.3.min.js")
 	link(href="assets/css/normalize.css", type="text/css", rel="stylesheet")
 	link(href="assets/css/foundation.css", type="text/css", rel="stylesheet")
 	link(href="assets/css/style.css", type="text/css", rel="stylesheet")
@@ -30,8 +31,9 @@ body
 							div.options.hidden options
 				div.hidden
 					img(src="assets/img/burncard.jpg")
-	script
-		-document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>');
+	script document.write('<script src=assets/js/vendor/' + ('__proto__' in {} ? 'zepto' : 'jquery') + '.js><\/script>')
+	script var userID = #{userid} 
+	script var roomID = #{room}
 	script(src="assets/js/foundation.min.js")
-	script(src="assets/js/player.js");
+	script(src="assets/js/player.js")
 	script!= '$(document).foundation();' 
