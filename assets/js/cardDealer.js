@@ -28,3 +28,7 @@ function showCard(card){
 function toast(message){
 	$('.toast').text(message);
 };
+function clearTable(){
+	$('.burnCard').remove();
+	$('.showCard').remove();
+}

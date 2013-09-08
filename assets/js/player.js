@@ -15,6 +15,7 @@ $('.call').click(function() {
 });
 $('.fold').click(function() {
     sockjs.send(JSON.stringify({'action': 'fold'}));
+    $('.playActions div').addClass('hidden');
 });
 $('.menuOpen').click(function(){
     $('.raiseMenu').removeClass("hidden");
@@ -40,7 +41,7 @@ sockjs.onmessage = function(e) {
             card1 = info.card;
             dealCard(card1);
         }
-    }else if (info.action == 'checkCallError') {
+    } else if (info.action == 'checkCallError') {
         // Not your turn, or some other error
         toast(info.response);
     } else if (info.action == 'raiseError') {
@@ -76,6 +77,7 @@ sockjs.onmessage = function(e) {
         // clear cards
         card1 = null;
         card2 = null;
+        clearCards();
     } else if (info.action == 'check') {
         toast(info.name + ' checked.');
     } else if (info.action == 'call') {
