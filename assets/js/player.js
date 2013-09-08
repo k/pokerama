@@ -90,7 +90,7 @@ $('li.standard').click(function(){
     var raiseAmt = parseFloat($(this).text());
     sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
 });
-$('li.custom').click(function(){
+$('li.custom .submitCustom').click(function(){
     var raiseAmt = parseFloat($('#customRaise').val());
     sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
 });
