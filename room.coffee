@@ -64,11 +64,11 @@ class Room
 		for pp in @players
 			st = ""
 			if pp == @currentDealer
-				pp.name = st = "dealer"
+				st = "dealer"
 			else if pp == smallBlind
-				pp.name = st = "smallBlind"
+				st = "smallBlind"
 			else if pp == bigBlind
-				pp.name = st = "bigBlind"
+				st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
 
 		@terminatingPlayer = bigBlind.nextPlayer
@@ -95,7 +95,7 @@ class Room
 
 
 	checkCall: (aConn) ->
-		return "action":"checkCall","response":"Game is over" if @gameEnded?
+		return "action":"checkCall","response":"Game is over" if @gameEnded
 		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
 		if @currentPlayer.currentBet < @currentBet
@@ -107,7 +107,7 @@ class Room
 		
 
 	raise: (aConn, amount) ->
-		return "action":"raise","response":"Game is over" if @gameEnded?
+		return "action":"raise","response":"Game is over" if @gameEnded
 		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
 		return "action":"raise","response":"Too low" if amount < @lastRaise
 		@currentBet += amount
@@ -119,7 +119,7 @@ class Room
 		do @step
 	
 	fold: (aConn, bet) ->
-		return "action":"fold","response":"Game is over" if @gameEnded?
+		return "action":"fold","response":"Game is over" if @gameEnded
 		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + "folds"
 		@currentPlayer.hasFolded = true
@@ -196,7 +196,11 @@ class Room
 		orderedPlayers.sort (a,b) ->
 			b.score.value - a.score.value
 
-		max = orderedPlayers[0].score.value
+		for p in orderedPlayers
+			if not p.hasFolded
+				max = p.score.value
+				break
+
 		winners = []
 		for p in orderedPlayers
 			if not p.hasFolded
@@ -214,25 +218,29 @@ class Room
 		for p in @players
 			pot += p.currentBet
 
-		winningNames = []
+		winningUsers = []
 		for w in winners
-			winningNames.push({"userID":w.uuid,"name":w.name})
+			totalWinnings = 0
 			for p in @players
+				payOut = (p.currentBet / winners.length)
+				totalWinnings += payOut
 				if p != w
-					payOut = (p.currentBet / winners.length).toFixed(2)
 					message = @generateHumiliatingMessage(w, p, payOut)
 					payment = {"payer":p, "payee":w, "amount":payOut, "message":message}
 					@transactions.push payment
-					console.log "Making Payment:\n" + JSON.stringify (payment)
+					console.log "Making Payment: " + p.name + " to " + w.name + " (" + payOut + ") " + message
 					#Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
 
-		p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
-		@hostConn.write JSON.stringify("action":"handOver","winners":winningNames)
+			winningUsers.push({"userID":w.uuid,"name":w.name,"amount":totalWinnings.toFixed(2)})
+
+		for p in @players
+			p.conn.write JSON.stringify("action":"handOver","winners":winningUsers)
+		@hostConn.write JSON.stringify("action":"handOver","winners":winningUsers)
 		return null
 
 	reverseTransactions: () ->
 		for t in @transactions
-			console.log "Reversing Payment:\n" + JSON.stringify(t)
+			console.log "Reversing Payment: " + t.payer.name + " to " + t.payee.name + " (" + t.amount + ") " + t.message
 			#Venmo.makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount, "reverse " + t.message)
 
 	newHand: (conn) ->
