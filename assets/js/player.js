@@ -46,13 +46,13 @@ sockjs.onmessage = function(e) {
             card1 = info.card;
             dealCard(card1);
         }
-    }else if (info.action == 'checkCall') {
+    }else if (info.action == 'checkCallError') {
         // Not your turn, or some other error
         toast(info.response);
-    } else if (info.action == 'raise') {
+    } else if (info.action == 'raiseError') {
         // Not your turn, or some other error
         toast(info.response);
-    } else if (info.action == 'fold') {
+    } else if (info.action == 'foldError') {
         // Not your turn, or some other error
         toast(info.response);
     } else if (info.action == 'status') {
@@ -76,12 +76,24 @@ sockjs.onmessage = function(e) {
         }
     } else if (info.action == 'handOver') {
         toast(info.winners[0].name + " won!");
+    } else if (info.action == 'hasTurn') {
+        $('.currentTurn').text(info.name + "'s turn.");
+        toast("It is " + info.name + "'s turn");
     } else if (info.action == 'clearTable') {
         // clear cards
         card1 = null;
         card2 = null;
+    } else if (info.action == 'check') {
+        $('.lastAction').text(info.name + ' checked.');
+    } else if (info.action == 'call') {
+        $('.lastAction').text(info.name + ' called.');
+    } else if (info.action == 'raise') {
+        $('.lastAction').text(info.name + ' raised $' + info.amount + '.');
+    } else if (info.action == 'fold') {
+        $('.lastAction').text(info.name + ' folded.');
     }
 };
+
 function updateRaises(minRaise){
    $('li.little').text(minRaise);
    $('li.big').text(parseFloat(minRaise)*2);
