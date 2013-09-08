@@ -71,8 +71,6 @@ class Room
 			if pp == @currentDealer
 				st = "dealer"
 				@hostConn.write JSON.stringify("action":"setDealer","userID":pp.venmoId)
-				for ppp in @players
-					ppp.conn.write JSON.stringify("action":"setDealer","userID":pp.venmoId)
 			else if pp == smallBlind
 				st = "smallBlind"
 			else if pp == bigBlind
