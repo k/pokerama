@@ -143,6 +143,10 @@
 	display: inline-block;
 	vertical-align: top;
 }
+#status{
+	display:inline-block;
+	vertical-align:top;
+}
 .toast{
 	display: block;
 	background: rgba(0,0,0,0.6);
@@ -151,11 +155,11 @@
 	padding-top:0px;
 	padding-top:0px;
 	color: #fff;
-	font-size: 1.5em;
+	font-size: 1.2em;
 	line-height: 2em;
 	text-align: center;
 	border-radius: 6px;
-	margin-top:3em;
+	margin-top:20px;
 }
 #blindAmt, .startGame{
 	display: inline-block;
