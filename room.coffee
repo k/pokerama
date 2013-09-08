@@ -221,9 +221,9 @@ class Room
 				if p != w
 					payOut = (p.currentBet / winners.length).toFixed(2)
 					message = @generateHumiliatingMessage(w, p, payOut)
-          payment = {"payer":p, "payee":w, "amount":payOut, "message":message}
+					payment = {"payer":p, "payee":w, "amount":payOut, "message":message}
 					@transactions.push payment
-          console.log "Making Payment:\n" + JSON.stringify payment
+					console.log "Making Payment:\n" + JSON.stringify (payment)
 					#Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
 
 		p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
@@ -232,7 +232,7 @@ class Room
 
 	reverseTransactions: () ->
 		for t in @transactions
-      console.log "Reversing Payment:\n" + JSON.stringify payment
+			console.log "Reversing Payment:\n" + JSON.stringify(t)
 			#Venmo.makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount, "reverse " + t.message)
 
 	newHand: (conn) ->
