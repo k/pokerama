@@ -53,11 +53,11 @@ sockjs.onmessage = function(e) {
     } else if (info.action == 'call') {
         toast(info.name + " called.");
         // update player pot
-        updatePlayerPot(info.userID,info.amount);
+        updatePlayerPot(info.userID,info.playerPot);
     } else if (info.action == 'raise') {
-        toast(info.name + " raised " + info.amtRaised);
+        toast(info.name + " raised " + info.amount);
         // update player pot
-        updatePlayerPot(info.userID,info.amount);
+        updatePlayerPot(info.userID,info.playerPot);
     } else if (info.action == 'status') {
         updatePlayerPot(info.userID,info.amount);
     }
