@@ -14,7 +14,7 @@
 .playerList{
 	width: 100%;
 	line-height:120px;
-	top:20px;
+	margin-top:25px;
 }
 .player{
 	width:100px;
