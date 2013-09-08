@@ -7,6 +7,7 @@ class Room
 		@currentDealer = null
 		@terminatingPlayer = null
 		@players = []
+		@blind = 0
 		do @initHand
 	
 	initHand: () ->
@@ -31,6 +32,7 @@ class Room
 			a) arr
 	
 	startGame: (blind) ->
+		@blind = blind
 		if @players.length < 3
 			return "action":"startGame","response":"Not enough players"
 		@currentDealer = @players[0]
@@ -55,9 +57,9 @@ class Room
 			p.hasShownHand = false
 		dealerCount = 0
 		smallBlind = @currentDealer.nextPlayer #small
-		smallBlind.currentBet = blind / 2
+		smallBlind.currentBet = @blind / 2
 		bigBlind = smallBlind.nextPlayer
-		bigBlind.currentBet = blind #big
+		bigBlind.currentBet = @blind #big
 		@round = 0
 		@currentBet = 50
 		@lastRaise = @currentBet
