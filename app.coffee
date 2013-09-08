@@ -60,7 +60,7 @@ echo.on 'connection', (conn) ->
 			player = routes.temp[''+obj.userID]
 			pl = new Player(conn, obj.userID, player.user.name, player.user.profile, player.access_token)
 			routes.temp[''+obj.userID] = null
-			if rm.addPlayer pl
+			if rm.addPlayer conn, pl
 				conns[conn] = rm
 				conn.write JSON.stringify("action":"joinRoom","response":rm.status)
 				return

@@ -80,27 +80,35 @@ class Room
 		for p in @players
 			console.log "currentBet: " + @currentBet + ",p.currentBet: " + p.currentBet
 			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastRaise,"canGo": p == @currentPlayer})
+		@hostConn.write JSON.stringify("action":"hasTurn","userID":@currentPlayer.uuid)
 
-	addPlayer: (player) ->
+	addPlayer: (conn,player) ->
 		if @players.length == 9
 			return false
 		@players.push player
 		player.seat = @players.length
-		@hostConn.write JSON.stringify("action":"playerJoined","player":{"name":player.name,"picture":player.pic, "userid":player.uuid,"seat":@players.length})
+		@hostConn.write JSON.stringify("action":"playerJoined","userID":{"name":player.name,"picture":player.pic, "userid":player.uuid,"seat":@players.length})
 		return true
 
 
 	checkCall: (aConn) ->
+		return "action":"checkCall","response":"Game is over" if @gameEnded?
 		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
+		if @currentPlayer.currentBet < @currentBet
+			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.uuid,"name":@currentPlayer.name,"amount":@currentBet)
+		else
+			@hostConn.write JSON.stringify("action":"check","userID":@currentPlayer.uuid,"name":@currentPlayer.name)
 		@currentPlayer.currentBet = @currentBet
 		do @step
 		
 
 	raise: (aConn, amount) ->
+		return "action":"raise","response":"Game is over" if @gameEnded?
 		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
 		return "action":"raise","response":"Too low" if amount < @lastRaise
 		@currentBet += amount
+		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.uuid,"amount":amount,"stakes":@currentBet)
 		console.log @currentPlayer.name + " raises by " + amount + " to total " + @currentBet
 		@lastRaise = amount
 		@currentPlayer.currentBet = @currentBet
@@ -108,6 +116,7 @@ class Room
 		do @step
 	
 	fold: (aConn, bet) ->
+		return "action":"fold","response":"Game is over" if @gameEnded?
 		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + "folds"
 		@currentPlayer.isFolded = true
@@ -125,6 +134,7 @@ class Room
 				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-@currentPlayer.currentBet,"raiseAmount":@lastRaise,"canGo":true})
 				if not @terminatingPlayer?
 					@terminatingPlayer = @currentPlayer
+				@hostConn.write JSON.stringify("action":"hasTurn","userID":@currentPlayer.uuid)
 				return null
 			@currentPlayer = @currentPlayer.nextPlayer
 		do @nextRound
@@ -197,6 +207,10 @@ class Room
 			pot += p.currentBet
 		winnings = (pot / winners.length).toFixed(2)
 
+		@gameEnded = true
+		winningNames = []
+		for w in winners
+			winningNames.push({"userID":w.uuid,"name":w.name})
 		for p in @players
 			cashOut = 0
 			for w in winners
@@ -204,16 +218,18 @@ class Room
 					cashOut = winnings
 					break
 			p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
-		for p in @players
-			p.conn.write JSON.stringify("action":"status","info":{"callAmount":0,"raiseAmount":0,"canGo":false})
-		@gameEnded = true
+		@hostConn.write JSON.stringify("action":"handOver","winners":winningNames)
 		return null
 
 	newHand: (conn) ->
 		return "action":"newHand","response":"No." if conn != @hostConn
 		return "action":"newHand","response":"Game currently in progress" if not @gameEnded
+		for p in @players
+			p.conn.write JSON.stringify("action":"clearTable")
+		@hostConn.write JSON.stringify("action":"clearTable")
 		do @initHand
 		@currentDealer = @currentDealer.nextPlayer
+		@hostConn.write JSON.stringify("action":"moveDealer","userID":@currentDealer.uuid)
 		do @dealHand
 		return null
 
