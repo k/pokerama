@@ -72,19 +72,18 @@ sockjs.onmessage = function(e) {
         toast(info.winners[0].name + " won!");
     } else if (info.action == 'hasTurn') {
         $('.currentTurn').text(info.name + "'s turn.");
-        toast("It is " + info.name + "'s turn");
     } else if (info.action == 'clearTable') {
         // clear cards
         card1 = null;
         card2 = null;
     } else if (info.action == 'check') {
-        $('.lastAction').text(info.name + ' checked.');
+        toast(info.name + ' checked.');
     } else if (info.action == 'call') {
-        $('.lastAction').text(info.name + ' called.');
+        toast(info.name + ' called.');
     } else if (info.action == 'raise') {
-        $('.lastAction').text(info.name + ' raised $' + info.amount + '.');
+        toast(info.name + ' raised $' + info.amount + '.');
     } else if (info.action == 'fold') {
-        $('.lastAction').text(info.name + ' folded.');
+        toast(info.name + ' folded.');
     }
 };
 
