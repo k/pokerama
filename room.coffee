@@ -32,6 +32,8 @@ class Room
 			a) arr
 	
 	startGame: (blind) ->
+		if not blind? or blind == 0 or parseInt(blind) == NaN
+			blind = 6
 		console.log blind
 		if not blind? or blind == 0 or parseInt(blind) == NaN
 			blind = 6

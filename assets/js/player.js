@@ -22,7 +22,12 @@ $('.bet').click(function() {
 $('.fold').click(function() {
     sockjs.send(JSON.stringify({'action': 'fold'}));
 });
-
+$('.menuOpen').click(function(){
+    $('.raiseMenu').show();
+});
+$('.hideMenu').click(function(){
+    $('.raiseMenu').hide();
+});
 sockjs.onopen = function() {
     console.log(roomID);
     sockjs.send(JSON.stringify({'action': 'joinRoom', 'room': roomID, 'userID': userID}));
