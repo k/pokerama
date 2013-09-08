@@ -10,7 +10,9 @@ $('.startGame').click(function () {
     }
 });
 
-// $('.nextHand').click(function () { });
+$('.nextHand').click(function () {
+    sockjs.send(JSON.stringify({action: 'nextHand'}));
+});
 
 sockjs.onopen = function() {
     sockjs.send(JSON.stringify({action: 'createRoom'}));
@@ -21,7 +23,6 @@ sockjs.onmessage = function(e) {
         roomID = info.roomID;
         $('#tableID').text(roomID);
     } else if (info.action == 'startGame') {
-        console.log(info.startGame);
         if (info.response == "Have fun") {
             // startGame();
             $('#startGameWrap').hide();
@@ -30,18 +31,16 @@ sockjs.onmessage = function(e) {
         }
     } else if (info.action == 'playerJoined') {
         // Add player to UI (id, profile_pic, name)
-        console.log(info.playerData);
+        console.log(info);
         addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);
         players.push(info.playerData);
     } else if (info.action == 'burn') {
         // Burn a card
         burnCard();
-        console.log(info.burn);
     } else if (info.action == 'showCard') {
         // Show a card
-        card.push(info.card);
+        cards.push(info.card);
         showCard(info.card);
-        console.log(info.showCard);
     } else if (info.action == 'hasTurn') {
         $('.hasTurn').removeClass('hasTurn');
         $('#_'+info.userID).addClass('hasTurn');
@@ -50,31 +49,25 @@ sockjs.onmessage = function(e) {
         toast(info.name + " folded.");
         $('#_'+info.userID).addClass('hasFolded');
         // fold user
-        console.log(info.fold);
     } else if (info.action == 'check') {
         toast(info.name + " checked.");
-        console.log(info.check);
     } else if (info.action == 'call') {
         toast(info.name + " called.");
         // update player pot
         updatePlayerPot(info.userID,info.amount);
-        console.log(info.call);
     } else if (info.action == 'raise') {
         toast(info.name + " raised " + info.amtRaised);
         // update player pot
         updatePlayerPot(info.userID,info.amount);
-        console.log(info.raise);
     }
 
 
 };
 function updatePlayerPot(id,amt){
     var delta;
-    delta.onload = function() {
-        $('.player#_'+id +'.playerStatus').val("$"+amt);
-        updateTotalPot(delta);
-    };
     delta = parseFloat(amt) - parseFloat($('.player#_'+id + '.playerStatus .playAmt').val());  
+    $('.player#_'+id +'.playerStatus').val("$"+amt);
+    updateTotalPot(delta);
 }
 function updateTotalPot(delta){
     $('#currTotal').val(parseFloat($('#currTotal').val()) + parseFloat(delta));
@@ -86,8 +79,7 @@ function addPlayer(id, name, pic){
         pic+
         "' /><div class='playerName'>"+
         name+
-        "</div><div class='playerStatus'>$0</div></li>");
+        "</div><div class='playerStatus'>$<span class='playAmt'>0</span></div></li>");
 }
 sockjs.onclose = function() {
-    console.log("socket closed");
 };

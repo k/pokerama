@@ -32,6 +32,7 @@ class Room
 			a) arr
 	
 	startGame: (blind) ->
+		console.log blind
 		@blind = blind
 		if @players.length < 3
 			return "action":"startGame","response":"Not enough players"
@@ -85,7 +86,7 @@ class Room
 		for p in @players
 			console.log "currentBet: " + @currentBet + ",p.currentBet: " + p.currentBet
 			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastRaise,"canGo": p == @currentPlayer})
-		@hostConn.write JSON.stringify("action":"hasTurn","userID":@currentPlayer.uuid)
+		@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}")
 
 	addPlayer: (conn,player) ->
 		if @players.length == 9
@@ -93,7 +94,7 @@ class Room
 		@players.push player
 		player.seat = @players.length
 		console.log "Joined: hostConn: " + @hostConn
-		@hostConn.write JSON.stringify("action":"playerJoined","playerData":{"name":player.name,"picture":player.pic, "userid":player.uuid,"seat":@players.length})
+		@hostConn.write JSON.stringify("action":"playerJoined","playerData":{"name":player.name,"picture":player.pic, "userID":player.venmoId,"seat":@players.length})
 		return true
 
 
@@ -102,9 +103,9 @@ class Room
 		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
 		if @currentPlayer.currentBet < @currentBet
-			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.uuid,"name":@currentPlayer.name,"amount":@currentBet)
+			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.venmoId,"name":@currentPlayer.name,"amount":@currentBet)
 		else
-			@hostConn.write JSON.stringify("action":"check","userID":@currentPlayer.uuid,"name":@currentPlayer.name)
+			@hostConn.write JSON.stringify("action":"check","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
 		@currentPlayer.currentBet = @currentBet
 		do @step
 		
@@ -114,7 +115,7 @@ class Room
 		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
 		return "action":"raise","response":"Too low" if amount < @lastRaise
 		@currentBet += amount
-		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.uuid,"amount":amount,"stakes":@currentBet)
+		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"stakes":@currentBet)
 		console.log @currentPlayer.name + " raises by " + amount + " to total " + @currentBet
 		@lastRaise = amount
 		@currentPlayer.currentBet = @currentBet
@@ -124,6 +125,7 @@ class Room
 	fold: (aConn, bet) ->
 		return "action":"fold","response":"Game is over" if @gameEnded
 		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
+		@hostConn.write JSON.stringify("action":"fold","userID":@currentPlayer.venmoId)
 		console.log @currentPlayer.name + "folds"
 		@currentPlayer.hasFolded = true
 		do @step
@@ -140,7 +142,7 @@ class Room
 				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-@currentPlayer.currentBet,"raiseAmount":@lastRaise,"canGo":true})
 				if not @terminatingPlayer?
 					@terminatingPlayer = @currentPlayer
-				@hostConn.write JSON.stringify("action":"hasTurn","userID":@currentPlayer.uuid)
+				@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}")
 				return null
 			@currentPlayer = @currentPlayer.nextPlayer
 		do @nextRound
@@ -234,7 +236,7 @@ class Room
 					console.log "Making Payment: " + p.name + " to " + w.name + " (" + payOut + ") " + message
 					#Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
 
-			winningUsers.push({"userID":w.uuid,"name":w.name,"amount":totalWinnings.toFixed(2)})
+			winningUsers.push({"userID":w.venmoId,"name":w.name,"amount":totalWinnings.toFixed(2)})
 
 		for p in @players
 			p.conn.write JSON.stringify("action":"handOver","winners":winningUsers)
@@ -254,7 +256,7 @@ class Room
 		@hostConn.write JSON.stringify("action":"clearTable")
 		do @initHand
 		@currentDealer = @currentDealer.nextPlayer
-		@hostConn.write JSON.stringify("action":"moveDealer","userID":@currentDealer.uuid)
+		@hostConn.write JSON.stringify("action":"moveDealer","userID":@currentDealer.venmoId)
 		do @dealHand
 		return null
 

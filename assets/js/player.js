@@ -1,16 +1,3 @@
-// (function($) {
-//     $.QueryString = (function(a) {
-//         if (a == "") return {};
-//         var b = {};
-//         for (var i = 0; i < a.length; ++i)
-//         {
-//             var p=a[i].split('=');
-//             if (p.length != 2) continue;
-//             b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-//         }
-//         return b;
-//     })(window.location.search.substr(1).split('&'));
-// })(jQuery);
 var sockjs_url = '/poker';
 var sockjs = new SockJS(sockjs_url);
 var callAmount = 0;
@@ -45,29 +32,24 @@ sockjs.onmessage = function(e) {
     var info = JSON.parse(e.data);
     if (info.action == 'joinRoom') {
         // Add UI (profile_pic, name)
-        console.log(info.roomID);
     } else if (info.action == 'showCard') {
         // show card in UI
         if (card1!==null) {
-            card2 = info.card.c;
+            card2 = info.card;
             dealCard(card2);
         } else {
-            card1 = info.card.c;
+            card1 = info.card;
             dealCard(card1);
         }
-        console.log(showCard);
     }else if (info.action == 'checkCall') {
         // Not your turn, or some other error
         toast(info.response);
-        console.log(info.checkCall);
     } else if (info.action == 'raise') {
         // Not your turn, or some other error
         toast(info.response);
-        console.log(info.raise);
     } else if (info.action == 'fold') {
         // Not your turn, or some other error
         toast(info.response);
-        console.log(info.fold);
     } else if (info.action == 'status') {
         callAmount = info.info.callAmount;
         minRaise = info.info.raiseAmount;
@@ -89,7 +71,6 @@ sockjs.onmessage = function(e) {
         // clear cards
         card1 = null;
         card2 = null;
-        console.log(handOver);
     }
 };
 function clearCards(){
@@ -103,7 +84,7 @@ function dealCard(card){
     var newCard;
     //wait 200ms before creating DOM object for appearance of linearity
     setTimeout(function(){
-        $('.playCards').append("<div class='playCard' style='display:none;' id='"+card+"'></div>");
+        $('.playCards').append("<div class='playCard' id='"+card+"'></div>");
     },200);
     //wait for newCard DOM object to load before sliding it in, like a bawss
     newCard = $('.playCards').children().last('.playCard');    
@@ -111,21 +92,21 @@ function dealCard(card){
 }
 function slideCard(newCard){
     $(newCard).fadeIn('fast');
-    $(newCard).css({'background': url("assets/img/burncard.jpg")});
+    $(newCard).css({'background': 'url("../assets/img/burncard.jpg")','display': 'inline-block'});
 }
 $(document).ready(function(){
-    var firstCard = $('.playCards').children().first('.playCard');
-    var secondCard = $('.playCards').children().last('.playCard');
-    var firstCardVal = $('.playCards').children().first('.playCard').attr('id');
-    var secondCardVal = $('.playCards').children().last('.playCard').attr('id');
-    var firstCardLoc = $('#firstCardImg').attr("src");
-    var secondCardLoc = $('#secondCardImg').attr("src");
-    $(".playCards").bind('mousedown', function(){
-        firstCard.css({background: "url('"+firstCardLoc+"')"});
-        secondCard.css({background: "url('"+secondCardLoc+"')"});
-    }).bind('mouseup', function(){
-        firstCard.css({background: "url('assets/img/burncard.jpg')"});
-        secondCard.css({background: "url('assets/img/burncard.jpg')"});
+    $(".playCards").bind('mousedown', function(e){
+        console.log("FUCK");
+        card1Path = "../assets/img/cards/"+card1+".jpg";
+        card2Path = "../assets/img/cards/"+card2+".jpg";
+        console.log("card1Path: " + card1Path);
+        console.log("card2Path: " + card2Path);
+        $('.playCards').children().last('.playCard').css({'background': 'url(' + card1Path + ')'});
+        $('.playCards').children().first('.playCard').css({'background': 'url(' + card2Path + ')'});
+    }).bind('mouseup', function(e){
+        console.log("YOU");
+        $('.playCards').children().last('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
+        $('.playCards').children().first('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
     });
 });
 

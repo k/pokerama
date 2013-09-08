@@ -62,7 +62,7 @@ echo.on 'connection', (conn) ->
 			conns[conn] = rm
 		else if obj.action == "startGame"
 			if conns[conn]?
-				ret = conns[conn].startGame()
+				ret = conns[conn].startGame(obj.blind)
 				conn.write JSON.stringify(ret) if ret != null
 			else
 				console.log "CRY MOTHERFUCKER."
