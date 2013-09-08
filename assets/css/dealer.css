@@ -6,6 +6,10 @@
 	width: 200px;
 	height: 63px;
 	margin-bottom:20px;
+	right:-10px;
+}
+#header{
+	height:60px;
 }
 .playerList{
 	width: 100%;
@@ -142,6 +146,9 @@
 	line-height: 2em;
 	display: inline-block;
 	vertical-align: top;
+	text-align:left;
+	left: -25px;
+	top:5px;
 }
 #status{
 	display:inline-block;
@@ -160,6 +167,7 @@
 	text-align: center;
 	border-radius: 6px;
 	margin-top:20px;
+	margin-left:15px;
 }
 #blindAmt, .startGame{
 	display: inline-block;

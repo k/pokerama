@@ -13,12 +13,6 @@ $('.check').click(function() {
 $('.call').click(function() {
     sockjs.send(JSON.stringify({'action': 'checkCall'}));
 });
-$('.raise').click(function() {
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
-});
-$('.bet').click(function() {
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
-});
 $('.fold').click(function() {
     sockjs.send(JSON.stringify({'action': 'fold'}));
 });
@@ -88,11 +82,11 @@ function updateRaises(minRaise){
 }
 $('li.standard').click(function(){
     var raiseAmt = parseFloat($(this).text());
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+    sockjs.send(JSON.stringify({'action': 'raise', 'amount': raiseAmt}));
 });
 $('li.custom .submitCustom').click(function(){
     var raiseAmt = parseFloat($('#customRaise').val());
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+    sockjs.send(JSON.stringify({'action': 'raise', 'amount': raiseAmt}));
 });
 function clearCards(){
     $('.playActions div').addClass("hidden");

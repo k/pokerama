@@ -7,6 +7,10 @@
 	width: 200px;
 	height: 63px;
 	margin-bottom:20px;
+	right: -10px;
+}
+#header{
+	height:60px;
 }
 #tableID{
 	text-align: right;
