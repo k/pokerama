@@ -111,7 +111,6 @@ function slideCard(newCard){
 }
 $(document).ready(function(){
     $(".playCards").bind('mousedown', function(e){
-        console.log("FUCK");
         card1Path = "../assets/img/cards/"+card1+".jpg";
         card2Path = "../assets/img/cards/"+card2+".jpg";
         console.log("card1Path: " + card1Path);
@@ -119,7 +118,17 @@ $(document).ready(function(){
         $('.playCards').children().last('.playCard').css({'background': 'url(' + card1Path + ')'});
         $('.playCards').children().first('.playCard').css({'background': 'url(' + card2Path + ')'});
     }).bind('mouseup', function(e){
-        console.log("YOU");
+        $('.playCards').children().last('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
+        $('.playCards').children().first('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
+    });
+    $(".playCards").bind('touchstart', function(e){
+        card1Path = "../assets/img/cards/"+card1+".jpg";
+        card2Path = "../assets/img/cards/"+card2+".jpg";
+        console.log("card1Path: " + card1Path);
+        console.log("card2Path: " + card2Path);
+        $('.playCards').children().last('.playCard').css({'background': 'url(' + card1Path + ')'});
+        $('.playCards').children().first('.playCard').css({'background': 'url(' + card2Path + ')'});
+    }).bind('touchend', function(e){
         $('.playCards').children().last('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
         $('.playCards').children().first('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
     });
