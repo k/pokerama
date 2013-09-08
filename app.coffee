@@ -31,20 +31,20 @@ echo.on 'connection', (conn) ->
 				return
 			else
 				conn.write JSON.stringify("action":"joinRoom","response":"cannot join room")
-				return 
+				return
 		else if message == "start"
 			obj = "action":"startGame"
 		else if message == "fold"
 			obj = "action":"fold"
 		else if message == "check" or message == "call" or message == "c"
 			obj = "action":"checkCall"
-		else if message == "newHand"
-			obj = "action":"newHand"
+		else if message == "nextHand"
+			obj = "action":"nextHand"
 		else if message == "unfuck" or message == "communism"
 			obj = "action":"reverseTransactions"
 		else if /raise (\d+)/.exec(message)?
 			m = /raise (\d+)/.exec(message)
-			obj = "action":"raise","bet":parseInt(m[1])
+			obj = "action":"raise","amount":parseInt(m[1])
 		else
 			try
 				obj = JSON.parse(message)
@@ -91,13 +91,13 @@ echo.on 'connection', (conn) ->
 			ret = conns[conn].checkCall conn
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "raise"
-			ret = conns[conn].raise(conn,obj.bet)
+			ret = conns[conn].raise(conn,obj.amount)
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "fold"
 			ret = conns[conn].fold conn
 			conn.write JSON.stringify(ret) if ret?
-		else if obj.action == "newHand"
-			ret = conns[conn].newHand conn
+		else if obj.action == "nextHand"
+			ret = conns[conn].nextHand conn
 			conn.write JSON.stringify(ret) if ret?
 		else if obj.action == "reverseTransactions"
 			ret = do conns[conn].reverseTransactions

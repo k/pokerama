@@ -255,9 +255,9 @@ class Room
 			console.log "Reversing Payment: " + t.payer.name + " to " + t.payee.name + " (" + t.amount + ") " + t.message
 			#Venmo.makePayment(t.payee.venmoAccessToken, t.payer.venmoId, t.amount, "reverse " + t.message)
 
-	newHand: (conn) ->
-		return "action":"newHand","response":"No." if conn != @hostConn
-		return "action":"newHand","response":"Game currently in progress" if not @gameEnded
+	nextHand: (conn) ->
+		return "action":"nextHand","response":"No." if conn != @hostConn
+		return "action":"nextHand","response":"Game currently in progress" if not @gameEnded
 		for p in @players
 			p.conn.write JSON.stringify("action":"clearTable")
 		@hostConn.write JSON.stringify("action":"clearTable")
