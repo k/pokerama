@@ -19,7 +19,7 @@ sockjs.onmessage = function(e) {
     var info = JSON.parse(e.data);
     if (info.roomID > 0) {
         roomID = info.roomID;
-    } else if (info.startGame) {
+    } else if (info.action == 'startGame') {
         console.log(info.startGame);
         if (info.startGame.response == "Have fun") {
             // startGame();
@@ -27,38 +27,38 @@ sockjs.onmessage = function(e) {
         } else if (info.startGame.response == "Not enough players") {
             // Update UI to show that there are not enough players
         }
-    } else if (info.playerJoined) {
+    } else if (info.action == 'playerJoined') {
         // Add player to UI (id, profile_pic, name)
         addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);
         players.append(info.playerData);
         console.log(info.playerJoined);
-    } else if (info.burn) {
+    } else if (info.action == 'burn') {
         // Burn a card
         burnCard();
         console.log(info.burn);
-    } else if (info.showCard) {
+    } else if (info.action == 'showCard') {
         // Show a card
         card.append(info.card);
         showCard(info.card);
         console.log(info.showCard);
-    } else if (info.hasTurn) {
+    } else if (info.action == 'hasTurn') {
         $('.hasTurn').removeClass('hasTurn');
         $('#_'+info.userID).addClass('hasTurn');
         // add class hasTurn to current player class info.userID
-    } else if (info.fold) {
+    } else if (info.action == 'fold') {
         toast(info.name + " folded.");
         $('#_'+info.userID).addClass('hasFolded');
         // fold user
         console.log(info.fold);
-    } else if (info.check) {
+    } else if (info.action == 'check') {
         toast(info.name + " checked.");
         console.log(info.check);
-    } else if (info.call) {
+    } else if (info.action == 'call') {
         toast(info.name + " called.");
         // update player pot
         updatePlayerPot(info.userID,info.amount);
         console.log(info.call);
-    } else if (info.raise) {
+    } else if (info.action == 'raise') {
         toast(info.name + " raised " + info.amtRaised);
         // update player pot
         updatePlayerPot(info.userID,info.amount);
