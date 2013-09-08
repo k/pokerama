@@ -1,4 +1,5 @@
 PokerEvaluator = require 'poker-evaluator'
+Venmo = require 'venmo'
 exports.Room =
 class Room
 	constructor: (@hostConn,@id) ->
@@ -182,42 +183,43 @@ class Room
 		@splitPot [player]
 
 	endHand: () ->
-		results = []
+		orderedPlayers = []
 		max = -1
 		for p in @players
 			hand = p.cards.concat @communalCards
-
-			score = PokerEvaluator.evalHand(hand)
-			results.push([p,score])
-			console.log p.name + "\n" + JSON.stringify(score)
+			p.score = PokerEvaluator.evalHand(hand)
+			orderedPlayers.push(p)
+			console.log p.name + "\n" + JSON.stringify(p.score)
 		
-		results.sort (a,b) ->
-			b[1].value - a[1].value
+		orderedPlayers.sort (a,b) ->
+			b.score.value - a.score.value
 
-		max = results[0][1].value
+		max = orderedPlayers[0].score.value
 		winners = []
-		for pair in results
-			winners.push(pair[0]) if pair[1].value == max and not pair[0].isFolded
+		for p in orderedPlayers
+			if p.score.value == max and not p.isFolded
+        winners.push(p)
 
 		@splitPot winners
 	
+
 	splitPot: (winners) ->
+		@gameEnded = true
+
 		pot = 0
 		for p in @players
 			pot += p.currentBet
-		winnings = (pot / winners.length).toFixed(2)
 
-		@gameEnded = true
 		winningNames = []
 		for w in winners
 			winningNames.push({"userID":w.uuid,"name":w.name})
-		for p in @players
-			cashOut = 0
-			for w in winners
-				if w == p
-					cashOut = winnings
-					break
-			p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
+      for p in @players
+        if p != w
+          payOut = (p.currentBet / winners.length).toFixed(2)
+          message = @generateHumiliatingMessage(w, p, payOut)
+          #Venmo.makePayment(p.venmoAccessToken, w.venmoId, payOut, message)
+
+    p.conn.write JSON.stringify("action":"handOver","winnings": cashOut)
 		@hostConn.write JSON.stringify("action":"handOver","winners":winningNames)
 		return null
 
@@ -232,5 +234,4 @@ class Room
 		@hostConn.write JSON.stringify("action":"moveDealer","userID":@currentDealer.uuid)
 		do @dealHand
 		return null
-
 
