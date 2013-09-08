@@ -58,7 +58,7 @@ echo.on 'connection', (conn) ->
 				return
 			console.log routes.temp
 			player = routes.temp[''+obj.userID]
-			pl = new Player(conn, obj.userID, player.user.name, player.user.profile, player.access_token)
+			pl = new Player(conn, obj.userID, player.access_token, player.user.name, player.user.profile)
 			routes.temp[''+obj.userID] = null
 			if rm.addPlayer conn, pl
 				conns[conn] = rm

@@ -1,11 +1,12 @@
 exports.Player =
 class Player
-	constructor: (@conn,@uuid, @name, @pic, @token) ->
+	constructor: (@conn, @venmoId, @venmoAccessToken, @name, @pic) ->
 		@seat = 0
 		@cards = []
 		@nextPlayer = null
 		@previousPlayer = null
 		@currentBet = 0
+    @score = null
 		@isFolded = false
 
 
