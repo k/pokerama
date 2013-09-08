@@ -6,6 +6,6 @@ function sendForm() {
     formData.append('userid', '0');
     formData.append('roomID', tableID);
     if (tableID) {
-        window.location = '/player' + '?userid=' + userID + '&roomID=' + tableID;
+        window.location = '/player' + '?userID=' + userID + '&roomID=' + tableID;
     }
 }

@@ -14,8 +14,10 @@ exports.comconsole = function(req, res) {
 exports.player = function(req, res) {
     var userID = req.query.userID;
     var roomID = req.query.roomID;
+    console.log(userID);
+    console.log(roomID);
     // put these two vars in the 'render' call to send to the client
-	res.render("player", {title: 'Player', id: userID, room: roomID});
+	res.render("player", {title: 'Player', 'userid': userID, 'room': roomID});
 };
 
 exports.choosetable = function(req, res) {

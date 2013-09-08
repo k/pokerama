@@ -19,6 +19,7 @@ sockjs.onmessage = function(e) {
     var info = JSON.parse(e.data);
     if (info.roomID > 0) {
         roomID = info.roomID;
+        $('#tableID').text(roomID);
     } else if (info.action == 'startGame') {
         console.log(info.startGame);
         if (info.startGame.response == "Have fun") {
@@ -29,16 +30,16 @@ sockjs.onmessage = function(e) {
         }
     } else if (info.action == 'playerJoined') {
         // Add player to UI (id, profile_pic, name)
+        console.log(info.playerData);
         addPlayer(info.playerData.userID, info.playerData.name, info.playerData.picture);
-        players.append(info.playerData);
-        console.log(info.playerJoined);
+        players.push(info.playerData);
     } else if (info.action == 'burn') {
         // Burn a card
         burnCard();
         console.log(info.burn);
     } else if (info.action == 'showCard') {
         // Show a card
-        card.append(info.card);
+        card.push(info.card);
         showCard(info.card);
         console.log(info.showCard);
     } else if (info.action == 'hasTurn') {
@@ -69,11 +70,11 @@ sockjs.onmessage = function(e) {
 };
 function updatePlayerPot(id,amt){
     var delta;
-    delta.onload = function(
-        $('.player#_'+id '.playerStatus').val("$"+amt);
+    delta.onload = function() {
+        $('.player#_'+id +'.playerStatus').val("$"+amt);
         updateTotalPot(delta);
-    );
-    delta = parseFloat(amt) - parseFloat($('.player#_'+id '.playerStatus .playAmt').val());  
+    };
+    delta = parseFloat(amt) - parseFloat($('.player#_'+id + '.playerStatus .playAmt').val());  
 }
 function updateTotalPot(delta){
     $('#currTotal').val(parseFloat($('#currTotal').val()) + parseFloat(delta));
@@ -81,9 +82,9 @@ function updateTotalPot(delta){
 function addPlayer(id, name, pic){
     $('.playerList').append("<li class='player' id='_"+
         id+
-        "'><div class='playerThumb' style='background: url("+
+        "'><img class='playerThumb' src='"+ 
         pic+
-        ")'></div><div class='playerName'>"+
+        "' /><div class='playerName'>"+
         name+
         "</div><div class='playerStatus'>$0</div></li>");
 }
