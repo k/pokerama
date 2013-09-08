@@ -33,6 +33,8 @@ class Room
 	
 	startGame: (blind) ->
 		console.log blind
+		if not blind? or blind == 0 or parseInt(blind) == NaN
+			blind = 6
 		@blind = blind
 		if @players.length < 3
 			return "action":"startGame","response":"Not enough players"
@@ -62,7 +64,7 @@ class Room
 		bigBlind = smallBlind.nextPlayer
 		bigBlind.currentBet = @blind #big
 		@round = 0
-		@currentBet = 50
+		@currentBet = @blind
 		@lastRaise = @currentBet
 		for pp in @players
 			st = ""
@@ -74,8 +76,8 @@ class Room
 				st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
 			
-		@hostConn.write JSON.serialize("action":"status","userID":"#{smallBlind.venmoId}","amount":@blind / 2)
-		@hostConn.write JSON.serialize("action":"status","userID":"#{bigBlind.venmoId}","amount":@blind)
+		@hostConn.write JSON.stringify("action":"status","userID":"#{smallBlind.venmoId}","amount":(@blind / 2))
+		@hostConn.write JSON.stringify("action":"status","userID":"#{bigBlind.venmoId}","amount":(@blind))
 
 		@terminatingPlayer = bigBlind.nextPlayer
 		p = smallBlind
@@ -106,7 +108,7 @@ class Room
 		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
 		if @currentPlayer.currentBet < @currentBet
-			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.venmoId,"name":@currentPlayer.name,"amount":@currentBet)
+			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.venmoId,"name":@currentPlayer.name,"playerPot":@currentBet)
 		else
 			@hostConn.write JSON.stringify("action":"check","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
 		@currentPlayer.currentBet = @currentBet
@@ -118,7 +120,7 @@ class Room
 		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
 		return "action":"raise","response":"Too low" if amount < @lastRaise
 		@currentBet += amount
-		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"stakes":@currentBet)
+		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"playerPot":@currentBet)
 		console.log @currentPlayer.name + " raises by " + amount + " to total " + @currentBet
 		@lastRaise = amount
 		@currentPlayer.currentBet = @currentBet
