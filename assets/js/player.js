@@ -13,12 +13,6 @@ $('.check').click(function() {
 $('.call').click(function() {
     sockjs.send(JSON.stringify({'action': 'checkCall'}));
 });
-$('.raise').click(function() {
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
-});
-$('.bet').click(function() {
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': 20}));
-});
 $('.fold').click(function() {
     sockjs.send(JSON.stringify({'action': 'fold'}));
 });
@@ -100,11 +94,11 @@ function updateRaises(minRaise){
 }
 $('li.standard').click(function(){
     var raiseAmt = parseFloat($(this).text());
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+    sockjs.send(JSON.stringify({'action': 'raise', 'amount': raiseAmt}));
 });
 $('li.custom .submitCustom').click(function(){
     var raiseAmt = parseFloat($('#customRaise').val());
-    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+    sockjs.send(JSON.stringify({'action': 'raise', 'amount': raiseAmt}));
 });
 function clearCards(){
     $('.playActions div').addClass("hidden");
@@ -129,7 +123,6 @@ function slideCard(newCard){
 }
 $(document).ready(function(){
     $(".playCards").bind('mousedown', function(e){
-        console.log("FUCK");
         card1Path = "../assets/img/cards/"+card1+".jpg";
         card2Path = "../assets/img/cards/"+card2+".jpg";
         console.log("card1Path: " + card1Path);
@@ -137,7 +130,17 @@ $(document).ready(function(){
         $('.playCards').children().last('.playCard').css({'background': 'url(' + card1Path + ')'});
         $('.playCards').children().first('.playCard').css({'background': 'url(' + card2Path + ')'});
     }).bind('mouseup', function(e){
-        console.log("YOU");
+        $('.playCards').children().last('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
+        $('.playCards').children().first('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
+    });
+    $(".playCards").bind('touchstart', function(e){
+        card1Path = "../assets/img/cards/"+card1+".jpg";
+        card2Path = "../assets/img/cards/"+card2+".jpg";
+        console.log("card1Path: " + card1Path);
+        console.log("card2Path: " + card2Path);
+        $('.playCards').children().last('.playCard').css({'background': 'url(' + card1Path + ')'});
+        $('.playCards').children().first('.playCard').css({'background': 'url(' + card2Path + ')'});
+    }).bind('touchend', function(e){
         $('.playCards').children().last('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
         $('.playCards').children().first('.playCard').css({'background': 'url("../assets/img/burncard.jpg")'});
     });
