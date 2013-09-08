@@ -12,7 +12,9 @@ $('.startGame').click(function () {
 
 $('.nextHand').click(function () {
     sockjs.send(JSON.stringify({action: 'nextHand'}));
+    $('.nextHand').hide();
 });
+$('.nextHand').hide();
 
 sockjs.onopen = function() {
     sockjs.send(JSON.stringify({action: 'createRoom'}));
@@ -59,6 +61,7 @@ sockjs.onmessage = function(e) {
         // update player pot
         updatePlayerPot(info.userID,info.playerPot);
     } else if (info.action == 'handOver') {
+        $('.nextHand').show();
         toast(info.winners[0].name + " won!");
     } else if (info.action == 'status') {
         updatePlayerPot(info.userID,info.amount);
