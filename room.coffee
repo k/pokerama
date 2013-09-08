@@ -78,8 +78,8 @@ class Room
 				st = "bigBlind"
 			pp.conn.write JSON.stringify("action":"handSetup","status":st)
 			
-		@hostConn.write JSON.stringify("action":"status","userID":"#{smallBlind.venmoId}","amount":(@blind / 2))
-		@hostConn.write JSON.stringify("action":"status","userID":"#{bigBlind.venmoId}","amount":(@blind))
+		@hostConn.write JSON.stringify("action":"status","userID":"#{smallBlind.venmoId}","name":"#{smallBlind.name}","amount":(@blind / 2))
+		@hostConn.write JSON.stringify("action":"status","userID":"#{bigBlind.venmoId}","name":"#{bigBlind.name}","amount":(@blind))
 
 		@terminatingPlayer = bigBlind.nextPlayer
 		p = smallBlind
@@ -93,7 +93,10 @@ class Room
 		for p in @players
 			console.log "currentBet: " + @currentBet + ",p.currentBet: " + p.currentBet
 			p.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-p.currentBet,"raiseAmount":@lastRaise,"canGo": p == @currentPlayer})
-		@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}")
+
+		@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}","name":"#{@currentPlayer.name}")
+		for p in @players
+			p.conn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}","name":"#{@currentPlayer.name}")
 
 	addPlayer: (conn,player) ->
 		if @players.length == 9
@@ -106,23 +109,31 @@ class Room
 
 
 	checkCall: (aConn) ->
-		return "action":"checkCall","response":"Game is over" if @gameEnded
-		return "action":"checkCall","response":"Not your turn" if @currentPlayer.conn != aConn
+		return "action":"checkCallError","response":"Game is over" if @gameEnded
+		return "action":"checkCallError","response":"Not your turn" if @currentPlayer.conn != aConn
 		console.log @currentPlayer.name + " check/Call from " + @currentPlayer.currentBet + " to " + @currentBet
 		if @currentPlayer.currentBet < @currentBet
 			@hostConn.write JSON.stringify("action":"call","userID":@currentPlayer.venmoId,"name":@currentPlayer.name,"playerPot":@currentBet)
+			for p in @players
+				p.conn.write JSON.stringify("action":"call","userID":@currentPlayer.venmoId,"name":@currentPlayer.name,"playerPot":@currentBet)
+				
 		else
 			@hostConn.write JSON.stringify("action":"check","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
+			for p in @players
+				p.conn.write JSON.stringify("action":"check","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
 		@currentPlayer.currentBet = @currentBet
 		do @step
 		
 
 	raise: (aConn, amount) ->
-		return "action":"raise","response":"Game is over" if @gameEnded
-		return "action":"raise","response":"Not your turn" if @currentPlayer.conn != aConn
-		return "action":"raise","response":"Too low" if amount < @lastRaise
+		return "action":"raiseError","response":"Game is over" if @gameEnded
+		return "action":"raiseError","response":"Not your turn" if @currentPlayer.conn != aConn
+		return "action":"raiseError","response":"Too low" if amount < @lastRaise
 		@currentBet += amount
-		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"playerPot":@currentBet)
+		@hostConn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"playerPot":@currentBet,"name":@currentPlayer.name)
+		for p in @players
+			p.conn.write JSON.stringify("action":"raise","userID":@currentPlayer.venmoId,"amount":amount,"playerPot":@currentBet,"name":@currentPlayer.name)
+
 		console.log @currentPlayer.name + " raises by " + amount + " to total " + @currentBet
 		@lastRaise = amount
 		@currentPlayer.currentBet = @currentBet
@@ -130,9 +141,12 @@ class Room
 		do @step
 	
 	fold: (aConn, bet) ->
-		return "action":"fold","response":"Game is over" if @gameEnded
-		return "action":"fold","response":"Not your turn" if @currentPlayer.conn != aConn
-		@hostConn.write JSON.stringify("action":"fold","userID":@currentPlayer.venmoId)
+		return "action":"foldError","response":"Game is over" if @gameEnded
+		return "action":"foldError","response":"Not your turn" if @currentPlayer.conn != aConn
+		@hostConn.write JSON.stringify("action":"fold","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
+		for p in @players
+			p.conn.write JSON.stringify("action":"fold","userID":@currentPlayer.venmoId,"name":@currentPlayer.name)
+			
 		console.log @currentPlayer.name + "folds"
 		@currentPlayer.hasFolded = true
 		do @step
@@ -149,7 +163,10 @@ class Room
 				@currentPlayer.conn.write JSON.stringify("action":"status","info":{"callAmount":@currentBet-@currentPlayer.currentBet,"raiseAmount":@lastRaise,"canGo":true})
 				if not @terminatingPlayer?
 					@terminatingPlayer = @currentPlayer
-				@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}")
+				@hostConn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}","name":"#{@currentPlayer.name}")
+				for p in @players
+					p.conn.write JSON.stringify("action":"hasTurn","userID":"#{@currentPlayer.venmoId}","name":"#{@currentPlayer.name}")
+
 				return null
 			@currentPlayer = @currentPlayer.nextPlayer
 		do @nextRound
