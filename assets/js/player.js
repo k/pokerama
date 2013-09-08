@@ -23,10 +23,10 @@ $('.fold').click(function() {
     sockjs.send(JSON.stringify({'action': 'fold'}));
 });
 $('.menuOpen').click(function(){
-    $('.raiseMenu').show();
+    $('.raiseMenu').removeClass("hidden");
 });
 $('.hideMenu').click(function(){
-    $('.raiseMenu').hide();
+    $('.raiseMenu').addClass("hidden");
 });
 sockjs.onopen = function() {
     console.log(roomID);
@@ -69,15 +69,31 @@ sockjs.onmessage = function(e) {
                 $('.raise').removeClass("hidden");
                 $('.call').removeClass("hidden");
             }
+            updateRaises(minRaise);
         } else {
                 $('.playActions div').addClass("hidden");
+                $('.raiseMenu').addClass("hidden");
         }
     } else if (info.action == 'handOver') {
+        toast(info.winners[0].name + " won!");
+    } else if (info.action == 'clearTable') {
         // clear cards
         card1 = null;
         card2 = null;
     }
 };
+function updateRaises(minRaise){
+   $('li.little').text(minRaise);
+   $('li.big').text(parseFloat(minRaise)*2);
+}
+$('li.standard').click(function(){
+    var raiseAmt = parseFloat($(this).text());
+    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+});
+$('li.custom').click(function(){
+    var raiseAmt = parseFloat($('#customRaise').val());
+    sockjs.send(JSON.stringify({'action': 'raise', 'bet': raiseAmt}));
+});
 function clearCards(){
     $('.playActions div').addClass("hidden");
     $('.playCards .playCard').remove();

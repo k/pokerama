@@ -20,17 +20,6 @@ function burnCard(){
 		newBurn.fadeIn('fast');
 	}
 }
-$('.burnButton').click(burnCard);
-$(function(){
-	$('.showButton').click(function(){
-		showCard("As");
-	});
-})
-$(function(){
-	$('.messageChange').click(function(){
-		toast("I'm a new message");
-	})
-})
 function showCard(card){
 	setTimeout(function(){
 		$('.showCards').append("<div class='showCard' id="+card+"><img src='assets/img/cards/"+card+".jpg' width='150' height='218'/></div>");
