@@ -60,6 +60,14 @@ sockjs.onmessage = function(e) {
             if(callAmount === 0){
                 $('.check').removeClass("hidden");
                 $('.bet').removeClass("hidden");
+                window.ondevicemotion = function(event) {
+                    var z = event.acceleration.z;
+                    console.log(z*z);
+                    if (z*z > 10) {
+                        sockjs.send(JSON.stringify({'action': 'checkCall'}));
+                        window.ondevicemotion = null;
+                    }
+                };
             } else{
                 $('.raise').removeClass("hidden");
                 $('.call').removeClass("hidden");
@@ -70,6 +78,7 @@ sockjs.onmessage = function(e) {
                 $('.raiseMenu').addClass("hidden");
         }
     } else if (info.action == 'handOver') {
+        window.ondevicemotion = null;
         toast(info.winners[0].name + " won!");
     } else if (info.action == 'hasTurn') {
         $('.currentTurn').text(info.name + "'s turn.");
