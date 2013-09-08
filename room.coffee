@@ -235,3 +235,11 @@ class Room
 		do @dealHand
 		return null
 
+	generateHumiliatingMessage: (winner, loser, payoutAmount) ->
+		if winner.hasShownHand
+			return winner.name + " beat " + loser.name + " with a " + winner.score.handName + " and won " + payoutAmount
+		else
+			return winner.name + " may have bluffed " + loser.name + " out of " + payoutAmount
+		
+		return winner.name + " beat " + loser + "'s " + loser.score.handName
+	

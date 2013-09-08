@@ -7,7 +7,7 @@ path = require 'path'
 conns = {}
 rooms = {}
 playerInfo = {}
-roomCounter = 0
+roomCounter = 1000
 pl = null
 
 
