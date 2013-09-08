@@ -84,6 +84,7 @@ function resetPot() {
     }
     updateCurrBet(0);
     updateTotalPot(0);
+    $('.hasFolded').removeClass('hasFolded');
 }
 function setPlayerPot(id,amt) {
     $('.player#_'+id+'.playerStatus .playAmt').text(amt);
